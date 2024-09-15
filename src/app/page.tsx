@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
+    <><div className={styles.page}>
       <main className={styles.main}>
         <Image
           className={styles.logo}
@@ -11,14 +11,15 @@ export default function Home() {
           alt="Next.js logo"
           width={180}
           height={38}
-          priority
-        />
+          priority />
         <ol>
           <li>
             Get started by editing <code>src/app/page.tsx</code>.
           </li>
           <li>Save and see your changes instantly.</li>
+          <li>Hello!</li>
         </ol>
+        
 
         <div className={styles.ctas}>
           <a
@@ -32,8 +33,7 @@ export default function Home() {
               src="https://nextjs.org/icons/vercel.svg"
               alt="Vercel logomark"
               width={20}
-              height={20}
-            />
+              height={20} />
             Deploy now
           </a>
           <a
@@ -57,8 +57,7 @@ export default function Home() {
             src="https://nextjs.org/icons/file.svg"
             alt="File icon"
             width={16}
-            height={16}
-          />
+            height={16} />
           Learn
         </a>
         <a
@@ -71,8 +70,7 @@ export default function Home() {
             src="https://nextjs.org/icons/window.svg"
             alt="Window icon"
             width={16}
-            height={16}
-          />
+            height={16} />
           Examples
         </a>
         <a
@@ -85,11 +83,11 @@ export default function Home() {
             src="https://nextjs.org/icons/globe.svg"
             alt="Globe icon"
             width={16}
-            height={16}
-          />
+            height={16} />
           Go to nextjs.org →
         </a>
       </footer>
     </div>
+    </>
   );
 }
