@@ -1,0 +1,59 @@
+.menu {
+    background: rgb(247, 246, 246);
+    display: block;
+    
+}
+
+.layer1, .layer2, .layer3 {
+    margin-bottom: 4px;
+    height: 5px;
+    width: 24px;
+    border-radius: 5px;
+    background-color: black;
+    transition: 0.25s ease-in-out;
+}
+
+.layer1close {
+    margin-bottom: 13px;
+    height: 5px;
+    width: 24px;
+    border-radius: 5px;
+    background-color: black;
+    transform: translateY(12px) rotate(45deg);
+    transition: 0.25s ease-in-out;
+}
+.layer2close {
+    visibility: hidden;
+    transition: 0.25s ease;
+}
+
+.layer3close {
+    margin-bottom: 4px;
+    height: 5px;
+    width: 24px;
+    border-radius: 5px;
+    background-color: black;
+    transform: translateY(-6px) rotate(-45deg) ;
+    transition: 0.25s ease-in-out;
+}
+
+.menu2>li>li{
+    padding: 5px 0px 5px 20px ;
+    list-style-type: none;
+    
+}
+
+
+
+.menu2>li:hover{
+    background-color: rgb(235, 235, 235);
+}
+
+.link ,.link:visited{
+    text-decoration: none;
+    color: #000;
+}
+
+.ul>li:hover{
+    background-color: rgb(240, 245, 245);
+}

@@ -1,0 +1,19 @@
+.searchbar {
+    display: flex;
+    justify-content: center;
+    height: 24px;
+}
+
+.bar {
+    width: 80%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.btn {
+    height: 30px;
+    margin-left: 10px;
+    border:none;
+    outline:none;
+    background:none;
+}
