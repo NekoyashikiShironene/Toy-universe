@@ -1,0 +1,22 @@
+
+tr,td,th{
+   border:1px solid rgb(158, 157, 157);
+   border-collapse: collapse;
+   padding: 20px;
+   
+}
+
+table {
+      margin: auto;
+    width: 80%;
+    text-align: center;
+    
+  }
+
+.product-col{
+   display:flex;
+   gap:3rem;
+   align-items: center;
+}
+
+
