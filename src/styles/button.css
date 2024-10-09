@@ -1,0 +1,14 @@
+.login-btn, .logout-btn {
+    color: #181823;
+    font-weight: 700;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.login-btn {
+    background-color: rgb(65, 199, 65);
+}
+
+.logout-btn {
+    background-color: rgb(240, 87, 87);
+}

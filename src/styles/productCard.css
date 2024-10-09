@@ -1,0 +1,31 @@
+.products {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.product:hover {
+    transform: scale(1.05);
+}
+
+.product {
+    color: black;
+    background-color: #181823;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.1s ease-in-out;
+    cursor: pointer;
+}
+
+a {
+    color: white;
+}
+
+img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+

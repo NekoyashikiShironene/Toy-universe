@@ -1,0 +1,36 @@
+.ads {
+   display: flex;
+   margin: 50px auto;
+   width: 60%;
+   aspect-ratio: 16/9;
+   position: relative;
+   align-items: center;
+   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+.prev,
+.next {
+   cursor: pointer;
+   padding: 10px;
+   background-color: rgba(0, 0, 0, 0.5);
+   color: white;
+   position: absolute;
+}
+
+.prev {
+   left: 10px;
+}
+
+.next {
+   right: 10px;
+}
+
+.prev:hover,.next:hover{
+   background-color: rgba(0, 0, 0, 0.7);
+}

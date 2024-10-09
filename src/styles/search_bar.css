@@ -1,0 +1,53 @@
+.mobile-searchbar {
+    display: flex;
+    justify-content: center;
+    height: 24px;
+}
+
+.mobile-bar {
+    width: 80%;
+    height: 100%;
+    border-radius: 20px;
+    padding-left: 5px;
+}
+
+.mobile-search-btn {
+    height: 30px;
+    margin-left: 10px;
+    border: none;
+    outline: none;
+    background: none;
+}
+
+.desktop-searchbar {
+    display: none;
+}
+
+
+@media screen and (min-width: 1024px) {
+    .mobile-searchbar {
+        display: none;
+    }
+
+    .desktop-searchbar {
+        display: flex;
+        height: 24px;
+        margin-right: 0px;
+        width: 25rem;
+    }
+
+    .desktop-bar {
+        height: 100%;
+        width: 80%;
+        border-radius: 20px;
+        padding-left: 5px;
+    }
+
+    .desktop-search-btn {
+        height: 30px;
+        margin-left: 10px;
+        border: none;
+        outline: none;
+        background: none;
+    }
+}
