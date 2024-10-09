@@ -3,7 +3,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
+import { Jomolhari } from 'next/font/google'
+import SessionWrapper from "@/components/SessionWrapper";
 
+const Jomol = Jomolhari({
+  weight: ['400'],
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
   title: "Toy Universe",
@@ -16,12 +22,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <Navbar />
-          {children}
-        <Footer />
-      </body>
+
+    <html lang="en" className={Jomol.className}>
+      <SessionWrapper>
+        <body>
+          <Navbar />
+          <main>
+            {children}
+          </main>
+          <Footer />
+        </body>
+      </SessionWrapper>
     </html>
   );
 }
