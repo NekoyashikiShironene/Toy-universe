@@ -1,9 +1,12 @@
 
-tr,td,th{
+table,tr{
    border:1px solid rgb(158, 157, 157);
    border-collapse: collapse;
-   padding: 20px;
    
+}
+
+td,th{
+   padding: 20px;
 }
 
 table {
