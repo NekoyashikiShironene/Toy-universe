@@ -1,9 +1,40 @@
-import Link from "next/link";
+import connectToDatabase from "@/utils/db";
+import ImageSlider from "@/components/ImageSlider";
+import "../styles/home.css";
 
-export default function Home() {
+type Member = {
+  cus_id: number,
+  username: string,
+  password: string,
+  name: string,
+  tel: string,
+  address: string,
+  gender: number
+}
+
+const testDatabaseConnection = async () => {
+  try {
+    const connection = await connectToDatabase();
+    console.log('Database connection successful!');
+    const [results, fields] = await connection.query("SELECT * FROM `customer`");
+    console.log(results, fields);
+    await connection.end();
+    
+    return results;
+
+
+  } catch (error) {
+    console.error('Database connection failed:', error);
+  }
+};
+
+
+
+export default async function Home() {
+
   return (
     <>
-    Page
+      <ImageSlider/>
     </>
   );
 }
