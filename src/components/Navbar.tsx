@@ -2,59 +2,108 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import Search from "./SearchBar";
 import MobileMenu from "./MobileMenu";
+import "../styles/mobile_menu.css";
+import { LoginButton, LogoutButton } from "./SignButton";
 
-import styles from "./styles/mobile_menu.module.css";
-
-import { FaBeer } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 
-// ['LEGO', 'Mattel', 'American Girl', 'Disney', 'LOL Surprise', 'Hasbro', 'Bandai', 'Revell', 'Tamiya', 'Metal Earth', 'KOSMOS', 'Days of Wonder', 'Z-Man Games']
-
-/* <li>Construction</li>
-                <li>Doll</li>
-                <li>Model</li>
-                <li>Board Game</li> */
+const categories = ['Construction', 'Doll', 'Model', 'Board Game'];
+const brands = ['LEGO', 'Mattel', 'American Girl', 'Disney', 'LOL Surprise', 'Hasbro', 'Bandai', 'Revell', 'Tamiya', 'Metal Earth', 'KOSMOS', 'Days of Wonder', 'Z-Man Games'];
 
 export default function Navbar() {
     const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
+
+    const { data: session } = useSession();
 
     return (
         <>
             <nav>
                 <div>
-                    <div onClick={() => { setIsBurgerOpen(!isBurgerOpen) }}>
-                            <div className={isBurgerOpen ? styles.layer1close : styles.layer1}></div>
-                            <div className={isBurgerOpen ? styles.layer2close : styles.layer2}></div>
-                            <div className={isBurgerOpen ? styles.layer3close : styles.layer3}></div>
+                    <div className="burger" onClick={() => { setIsBurgerOpen(true) }}>
+                        <div className="layer1"></div>
+                        <div className="layer2"></div>
+                        <div className="layer3"></div>
                     </div>
 
-                    <Image
-                        src="/logo.png"
-                        alt="Logo"
-                        width={500}
-                        height={500}
-                        className="logo"
-                    />
-                    
+                    <div className="logo-search">
+                        <h1>Toy Universe</h1>
+                        <Search type="desktop" />
+                    </div>
 
-                    <div>
-                        <Link href="/">
-                            <FaShoppingCart size={35} color={'black'}/>
+                    <div className="right-menu">
+                        <Link href="/" className="desktop-menu">
+                            Home
                         </Link>
-                    </div>
+                        <Link href="/products" className="desktop-menu">
+                            Products
+                        </Link>
+                        <div className="dropdown">
+                            <button className="dropdown-btn">Categories</button>
+                            <div className="dropdown-content">
+                                <div className="menu-category">
+                                    <h2>Categories</h2>
+                                    <ul>
+                                        {
+                                            categories.map(item => (
+                                                <li key={item}>
+                                                    <Link href={"/products?category=" + item} className="">
+                                                        {item}
+                                                    </Link>
+                                                </li>
+                                            ))
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="dropdown">
+                            <button className="dropdown-btn">Brands</button>
 
+                            <div className="dropdown-content">
+                                <div className="menu-brand">
+                                    <h2>Brands</h2>
+                                    <ul>
+                                        {
+                                            brands.map((item, index) => (
+                                                <li key={index}>
+                                                    <Link href={"/products?brand=" + item} className="">
+                                                        {item}
+                                                    </Link>
+                                                </li>
+                                            ))
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {
+                            session?.user ? (
+                                <>
+                                    <Link href="/cart" className="cart">
+                                        <FaShoppingCart size={35} color={'#C0EEF2'} />
+                                    </Link>
+                                    Profile
+                                    <LogoutButton />
+                                </>
+                            ) : (
+                                <LoginButton />
+                            )
+                            
+                            
+                        }
+                    </div>
+                    
                 </div>
 
-
-                <Search />
-
+                <Search type="mobile" />
             </nav>
-            {
-                isBurgerOpen && <MobileMenu />
-            }
+
+            <MobileMenu open={isBurgerOpen} setOpen={setIsBurgerOpen} />
         </>
     )
 }
