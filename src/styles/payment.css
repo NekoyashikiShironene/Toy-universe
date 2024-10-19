@@ -1,5 +1,6 @@
 .payment-container{
    margin: 10px;
+   
 }
 
 .payment-container>.pay{
@@ -10,14 +11,14 @@
    padding:20px;
 }
 
-button{
+.payment-button{
    padding: 5px;
    background-color: rgb(192, 238, 242);
    border: 1px solid rgb(192, 238, 250);
 }
 
-button:hover{
-   background-color: rgb(205, 236, 240);
+.payment-button:hover{
+   background-color: rgb(185, 226, 231);
 }
 
 
@@ -47,6 +48,8 @@ button:hover{
 }
 
 .address{
+   display: flex;
+   gap:10px;
    border-top: 1px solid black;
    margin-bottom: 10px;
 }
@@ -65,4 +68,25 @@ button:hover{
 .cancel:hover{
    background-color: rgb(194, 193, 193);
    
+}
+
+.product{
+   display: flex;
+   gap:20px;
+}
+
+
+[class|='dropdown']{
+   background-color: white;   
+   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+   padding:20px;
+}
+
+.dropdown-payment-select{
+   display: flex;
+   justify-content: space-between;
+}
+
+.selected-payment{
+   color:green;
 }
