@@ -1,5 +1,8 @@
 import connectToDatabase from "@/utils/db";
 import ImageSlider from "@/components/ImageSlider";
+import DummyButton from "@/components/DummyButton";
+import Search from "@/components/SearchBar";
+import { ScreenContainer } from "@/components/Containers";
 import "../styles/home.css";
 
 type Member = {
@@ -15,9 +18,7 @@ type Member = {
 const testDatabaseConnection = async () => {
   try {
     const connection = await connectToDatabase();
-    console.log('Database connection successful!');
     const [results, fields] = await connection.query("SELECT * FROM `customer`");
-    console.log(results, fields);
     await connection.end();
     
     return results;
@@ -33,8 +34,10 @@ const testDatabaseConnection = async () => {
 export default async function Home() {
 
   return (
-    <>
+    <ScreenContainer>
+      <Search type="mobile" />
       <ImageSlider/>
-    </>
+      <DummyButton />
+    </ScreenContainer>
   );
 }
