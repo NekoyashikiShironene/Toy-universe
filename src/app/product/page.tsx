@@ -13,7 +13,7 @@ const getProductDetails = async (prod_id: string) => {
     );
     await connection.end();
 
-    return results[0]; // คืนค่าผลลัพธ์แรก
+    return results[0]; 
   } catch (error) {
     console.error('Database connection failed:', error);
   }
@@ -52,7 +52,9 @@ export default async function ProductDetailPage({ searchParams }: Prop) {
     <p className="product-description">รายละเอียดสินค้า: <br />{product.description}</p>
     <p className="stock">จำนวนสินค้าในคลัง: {product.quantity} ชิ้น</p>
     <button className="add-to-cart">เพิ่มลงในตะกร้า</button>
+    <button className="buy">สั่งซื้อ</button>
   </div>
 </div>
   );
 }
+
