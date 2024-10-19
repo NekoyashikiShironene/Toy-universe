@@ -17,6 +17,7 @@ html, body {
 
 a {
   text-decoration: none;
+  color: black;
 }
 
 .desktop-menu {
@@ -32,6 +33,11 @@ nav {
   padding: var(--navbar-py) 0;
   z-index: 20;
   background: #537FE7;
+  transition: 0.25s;
+}
+
+nav.invisible {
+  top: calc((var(--navbar-h) + 2 * var(--navbar-py)) * -1);
 }
 
 .logo {
@@ -136,18 +142,28 @@ li {
     color: black;
     background-color: white;
     border-radius: 10px;
-    padding: 10px 10px;
+    padding: 10px 20px;
   }
 
   .dropdown:hover, .dropdown-content:hover {
     .dropdown-content {
       display: flex;
       gap: 20px;
-    }
+    } 
   }
 
   .content-container {
     width: 80%;
+}
+
+.dropdown-link {
+  margin: 10px 0;
+  padding: 0 20px;
+}
+
+.dropdown-link:hover {
+  background-color: aqua;
+  border-radius: 5px;
 }
 
 }

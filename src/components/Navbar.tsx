@@ -15,21 +15,35 @@ const brands = ['LEGO', 'Mattel', 'American Girl', 'Disney', 'LOL Surprise', 'Ha
 
 export default function Navbar() {
     const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
-
     const { data: session } = useSession();
 
+    if (typeof window !== undefined) {
+        let prevScrollpos = window.scrollY;
+        window.onscroll = function () {
+            const currentScrollPos = window.scrollY;
+            if (prevScrollpos > currentScrollPos) {
+               document.querySelector("nav")?.classList.remove("invisible");
+            } else {
+                document.querySelector("nav")?.classList.add("invisible");
+            }
+            prevScrollpos = currentScrollPos;
+        }
+
+    }
+
+    
     return (
         <>
-            <nav>
+            <nav className="visible">
                 <div>
-                    <div className="burger" onClick={() => { setIsBurgerOpen(true) }}>
+                    <div className="burger" onClick={() => setIsBurgerOpen(true)}>
                         <div className="layer1"></div>
                         <div className="layer2"></div>
                         <div className="layer3"></div>
                     </div>
 
                     <div className="logo-search">
-                        <h1>Toy Universe</h1>
+                        <h1 className="logo">Toy Universe</h1>
                         <Search type="desktop" />
                     </div>
 
@@ -48,8 +62,8 @@ export default function Navbar() {
                                     <ul>
                                         {
                                             categories.map(item => (
-                                                <li key={item}>
-                                                    <Link href={"/products?category=" + item} className="">
+                                                <li key={item} className="dropdown-link">
+                                                    <Link href={"/products?category=" + item} >
                                                         {item}
                                                     </Link>
                                                 </li>
@@ -59,7 +73,7 @@ export default function Navbar() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className="dropdown">
                             <button className="dropdown-btn">Brands</button>
 
@@ -69,8 +83,8 @@ export default function Navbar() {
                                     <ul>
                                         {
                                             brands.map((item, index) => (
-                                                <li key={index}>
-                                                    <Link href={"/products?brand=" + item} className="">
+                                                <li key={index} className="dropdown-link">
+                                                    <Link href={"/products?brand=" + item}>
                                                         {item}
                                                     </Link>
                                                 </li>
@@ -80,7 +94,7 @@ export default function Navbar() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         {
                             session?.user ? (
                                 <>
@@ -93,11 +107,11 @@ export default function Navbar() {
                             ) : (
                                 <LoginButton />
                             )
-                            
-                            
+
+
                         }
                     </div>
-                    
+
                 </div>
 
             </nav>
