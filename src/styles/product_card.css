@@ -1,16 +1,15 @@
-.products {
+.product-cards {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
 }
 
-.product:hover {
+.product-card:hover {
     transform: scale(1.05);
 }
 
-.product {
-    color: black;
+.product-card {
     background-color: #181823;
     padding: 10px;
     border-radius: 10px;
@@ -19,11 +18,11 @@
     cursor: pointer;
 }
 
-a {
+.product-card a {
     color: white;
 }
 
-img {
+product-img {
     width: 100%;
     aspect-ratio: 1/1;
     object-fit: cover;
