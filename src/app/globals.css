@@ -8,6 +8,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: var(--font-main);
 }
 
 html, body {
@@ -31,6 +32,10 @@ nav {
   padding: var(--navbar-py) 0;
   z-index: 20;
   background: #537FE7;
+}
+
+.logo {
+  font-family: var(--font-logo);
 }
 
 nav > div {
@@ -129,7 +134,9 @@ li {
     left: 50%;
     transform: translateX(-50%);
     color: black;
-    background-color: #C0EEF2;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px 10px;
   }
 
   .dropdown:hover, .dropdown-content:hover {
