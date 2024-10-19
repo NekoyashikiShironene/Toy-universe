@@ -100,7 +100,6 @@ export default function Navbar() {
                     
                 </div>
 
-                <Search type="mobile" />
             </nav>
 
             <MobileMenu open={isBurgerOpen} setOpen={setIsBurgerOpen} />
