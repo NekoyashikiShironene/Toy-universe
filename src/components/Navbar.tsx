@@ -54,15 +54,15 @@ export default function Navbar() {
                         <Link href="/products" className="desktop-menu">
                             Products
                         </Link>
-                        <div className="dropdown">
-                            <button className="dropdown-btn">Categories</button>
-                            <div className="dropdown-content">
+                        <div className="nav-dropdown">
+                            <button className="nav-dropdown-btn">Categories</button>
+                            <div className="nav-dropdown-content">
                                 <div className="menu-category">
                                     <h2>Categories</h2>
                                     <ul>
                                         {
                                             categories.map(item => (
-                                                <li key={item} className="dropdown-link">
+                                                <li key={item} className="nav-dropdown-link">
                                                     <Link href={"/products?category=" + item} >
                                                         {item}
                                                     </Link>
@@ -74,16 +74,16 @@ export default function Navbar() {
                             </div>
                         </div>
 
-                        <div className="dropdown">
-                            <button className="dropdown-btn">Brands</button>
+                        <div className="nav-dropdown">
+                            <button className="nav-dropdown-btn">Brands</button>
 
-                            <div className="dropdown-content">
+                            <div className="nav-dropdown-content">
                                 <div className="menu-brand">
                                     <h2>Brands</h2>
                                     <ul>
                                         {
                                             brands.map((item, index) => (
-                                                <li key={index} className="dropdown-link">
+                                                <li key={index} className="nav-dropdown-link">
                                                     <Link href={"/products?brand=" + item}>
                                                         {item}
                                                     </Link>
