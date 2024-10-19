@@ -16,6 +16,7 @@
 .form-input input {
     width: 100%;
     height: 80%;
+    border-style: solid;
 }
 
 .form-input label {
@@ -40,6 +41,14 @@
     top: 10%;
     background-color: white;
     font-size: 14px;
+}
+
+.form-input input:invalid {
+    border-color: rgb(247, 60, 60);
+}
+
+.form-input input:valid {
+    border-color: rgb(14, 204, 14);
 }
 
 .register-form button {
