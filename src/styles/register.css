@@ -1,5 +1,5 @@
 .register-form {
-    margin: 200px auto;
+    margin: 150px auto;
     padding: 1rem;
     background-color: white;
     width: 90%;
@@ -10,7 +10,9 @@
 
 .form-input {
     position: relative;
-    margin: 20px auto;
+    margin-top: 20px; 
+    margin-bottom: 5px;
+    margin: 0 auto;
     width: 50%;
 }
 .form-input input {
@@ -28,6 +30,7 @@
     cursor: text;
     padding: 0 5px;
     background: none;
+    
 }
 
 .register-form input {
@@ -41,14 +44,11 @@
     top: 10%;
     background-color: white;
     font-size: 14px;
+    border-radius: 50%;
 }
 
-.form-input input:invalid {
-    border-color: rgb(247, 60, 60);
-}
-
-.form-input input:valid {
-    border-color: rgb(14, 204, 14);
+.form-input input:placeholder-shown {
+    border-color: black;
 }
 
 .register-form button {
@@ -56,6 +56,15 @@
     background: none;
     border-radius: 10px;
 
+}
+
+.error-message {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.register-form h1 {
+    margin-bottom: 20px;
 }
 
 
