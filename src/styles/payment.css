@@ -1,35 +1,35 @@
-.payment-container{
+.payment-container {
    margin: 10px;
-   
+
 }
 
-.payment-container>.pay{
+.payment-container>.pay {
    background-color: white;
    /* border:1px solid black; */
    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
    margin: 10px 0 10px 0;
-   padding:20px;
+   padding: 20px;
 }
 
-.payment-button{
+.payment-button {
    padding: 5px;
    background-color: rgb(192, 238, 242);
    border: 1px solid rgb(192, 238, 250);
 }
 
-.payment-button:hover{
+.payment-button:hover {
    background-color: rgb(185, 226, 231);
 }
 
 
-.change-address{
+.change-address {
    margin-top: 5px;
 }
 
-.popup-background{
+.popup-background {
    position: fixed;
-   top:0;
-   left:0;
+   top: 0;
+   left: 0;
    width: 100%;
    height: 100%;
    background-color: rgba(0, 0, 0, 0.1);
@@ -38,55 +38,87 @@
    justify-content: center;
 }
 
-.popup-address{
+.popup-address,
+.popup-add-address {
    /* border:1px solid red; */
    width: 70%;
    background-color: white;
    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
    padding: 30px;
-   
+
 }
 
-.address{
+.popup-add-address {
    display: flex;
-   gap:10px;
+   flex-direction: column;
+   gap: 30px;
+}
+
+.address {
+   display: flex;
+   gap: 10px;
    border-top: 1px solid black;
    margin-bottom: 10px;
 }
 
-.popup-control-but{
+.popup-control-but {
    margin-top: 5px;
    display: flex;
-   gap:10px;
+   gap: 10px;
 }
 
-.cancel{
+.cancel {
    background-color: rgb(255, 255, 255);
    border: 1px solid rgb(177, 174, 174);
 }
 
-.cancel:hover{
+.cancel:hover {
    background-color: rgb(194, 193, 193);
-   
+
 }
 
-.product{
+
+
+.product {
    display: flex;
-   gap:20px;
+   gap: 20px;
 }
 
 
-[class|='dropdown']{
-   background-color: white;   
+[class|='dropdown'] {
+   background-color: white;
    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-   padding:20px;
+   padding: 20px;
 }
 
-.dropdown-payment-select{
+.dropdown-payment-select {
    display: flex;
    justify-content: space-between;
 }
 
-.selected-payment{
-   color:green;
+.selected-payment {
+   color: green;
+}
+
+@media screen and (min-width: 768px) {
+
+   .popup-add-address {
+      flex-direction: row;
+      flex-wrap: wrap;
+
+   }
+
+   .popup-add-address-head {
+      flex-basis: 100%;
+   }
+
+   .popup-control-but {
+      flex-basis: 100%;
+   }
+
+   .popup-add-address input {
+      /* flex-basis: calc(33.333% - 20px);  */
+
+      flex-basis: 30%;
+   }
 }
