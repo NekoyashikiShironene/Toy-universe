@@ -8,5 +8,4 @@ export interface ICustomer extends RowDataPacket {
     email?: string,
     tel?: string,
     address?: string,
-    gender?: number
 }
