@@ -41,7 +41,7 @@ export default function Login() {
                 <h1>Login</h1>
                 <form onSubmit={e => signInWithCredentials(e)}>
                     <div className="form-input">
-                        <input type="text" pattern="admin" id="username" placeholder=" " required />
+                        <input type="text" id="username" placeholder=" " required />
                         <label htmlFor="username">Username</label>
                     </div>
                     <div className="form-input">
