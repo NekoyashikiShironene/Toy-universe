@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Search from "./SearchBar";
 import MobileMenu from "./MobileMenu";
@@ -17,21 +17,22 @@ export default function Navbar() {
     const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
     const { data: session } = useSession();
 
-    if (typeof window !== undefined) {
+
+    useEffect(() => {
         let prevScrollpos = window.scrollY;
         window.onscroll = function () {
             const currentScrollPos = window.scrollY;
             if (prevScrollpos > currentScrollPos) {
-               document.querySelector("nav")?.classList.remove("invisible");
+                document.querySelector("nav")?.classList.remove("invisible");
             } else {
                 document.querySelector("nav")?.classList.add("invisible");
             }
             prevScrollpos = currentScrollPos;
         }
+    }, []);
 
-    }
 
-    
+
     return (
         <>
             <nav className="visible">

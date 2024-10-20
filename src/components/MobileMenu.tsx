@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import "../styles/mobile_menu.css";
 
 const categories = ['Construction', 'Doll', 'Model', 'Board Game'];
@@ -16,11 +15,13 @@ export default function MobileMenu({ open, setOpen }: Props) {
     const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
     const [isBrandOpen, setIsBrandOpen] = useState<boolean>(false);
 
-
-    const closeElements = document.querySelectorAll(".click-to-close");
-    closeElements.forEach(element => {
-        element.addEventListener('click', () => setOpen(false));
-    });
+    useEffect(() => {
+        const closeElements = document.querySelectorAll(".click-to-close");
+        closeElements.forEach(element => {
+            element.addEventListener('click', () => setOpen(false));
+        });
+    }, [setOpen]);
+    
 
     return (
         <>
