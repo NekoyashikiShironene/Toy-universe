@@ -3,6 +3,7 @@ import "../../styles/payment.css"
 import { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { ContentContainer } from "@/components/Containers";
+//import Form from 'next/form'
 
 
 type Prop = {
@@ -23,7 +24,26 @@ export default function PaymentPage({ searchParams }: Prop) {
    }, []);
 
 
-   const contacts = [
+   // const contacts = [
+   //    {
+   //       name: "สมชาย ใจดี",
+   //       phone: "081-234-5678",
+   //       address: "123 หมู่ 5 ตำบลในเมือง อำเภอเมือง จังหวัดกรุงเทพฯ 10200"
+   //    },
+   //    {
+   //       name: "มานะ พยายาม",
+   //       phone: "082-345-6789",
+   //       address: "456 ซอยสุขสันต์ ถนนสุขใจ ตำบลบางรัก อำเภอเมือง จังหวัดชลบุรี 20130"
+   //    },
+   //    {
+   //       name: "สายลม แสงแดด",
+   //       phone: "083-456-7890",
+   //       address: "789 หมู่บ้านสวนสวย ตำบลน้ำหวาน อำเภอหาดใหญ่ จังหวัดสงขลา 90110"
+   //    }
+   // ];
+
+   const [contacts, setContacts] = useState([
+
       {
          name: "สมชาย ใจดี",
          phone: "081-234-5678",
@@ -39,7 +59,7 @@ export default function PaymentPage({ searchParams }: Prop) {
          phone: "083-456-7890",
          address: "789 หมู่บ้านสวนสวย ตำบลน้ำหวาน อำเภอหาดใหญ่ จังหวัดสงขลา 90110"
       }
-   ];
+   ]);
 
    const payment = ['QR Code', 'โอนธนาคาร'];
 
@@ -49,7 +69,18 @@ export default function PaymentPage({ searchParams }: Prop) {
    const [handleDropdownPayment, sethandleDropdownPayment] = useState(false);
    const [selectedPayment, setselectedPayment] = useState<string>();
    const [selectedAddress, setselectedAddress] = useState(0);
-   const [tempSelectedAddress, setTempSelectedAddress] = useState(selectedAddress); 
+   const [tempSelectedAddress, setTempSelectedAddress] = useState(selectedAddress);
+   const [showAddressForm, setshowAddressForm] = useState<boolean>(false);
+
+   const [newAddress, setNewAddress] = useState({
+      name: '',
+      phone: '',
+      houseNumber: '',
+      soi: '',
+      district: '',
+      province: '',
+      postalCode: ''
+   });
 
    const handlePopup = () => {
       setshowPopup(!showPopup);
@@ -67,6 +98,45 @@ export default function PaymentPage({ searchParams }: Prop) {
    const handleSelectAddress = (i: number) => {
       setselectedAddress(i);
       setshowPopup(!showPopup);
+   }
+
+   const handleAddAddressForm = () => {
+      setshowAddressForm(!showAddressForm);
+      setshowPopup(!showPopup);
+   }
+
+   const handleChangeNewAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setNewAddress(prevState => ({
+         ...prevState,
+         [name]: value
+      }));
+   };
+
+   const handleAddAddress = () => {
+      setContacts(prevContacts => [
+         ...prevContacts,
+         {
+            name: newAddress.name,
+            phone: newAddress.phone,
+            address: `${newAddress.houseNumber} ${newAddress.soi} ${newAddress.district} ${newAddress.province} ${newAddress.postalCode}`
+         }
+      ]);
+
+
+      setNewAddress({
+         name: '',
+         phone: '',
+         houseNumber: '',
+         soi: '',
+         district: '',
+         province: '',
+         postalCode: ''
+      });
+
+      setshowAddressForm(!showAddressForm);
+      setshowPopup(!showPopup);
+
    }
 
 
@@ -91,7 +161,7 @@ export default function PaymentPage({ searchParams }: Prop) {
                      {
                         contacts.map((con, index) => (
                            <div key={index} className='address' >
-                              <input type="radio" name="address" onChange={() => setTempSelectedAddress(index)} checked={index == tempSelectedAddress}/>
+                              <input type="radio" name="address" onChange={() => setTempSelectedAddress(index)} checked={index == tempSelectedAddress} />
                               <div className="address-info">
                                  <div>ชื่อ:{con.name}</div>
                                  <div>เบอร์:{con.phone}</div>
@@ -104,7 +174,7 @@ export default function PaymentPage({ searchParams }: Prop) {
 
                      }
 
-                     <button className='payment-button add-address'>เพิ่มที่อยู่</button>
+                     <button className='payment-button add-address' onClick={handleAddAddressForm}>เพิ่มที่อยู่</button>
 
                      <div className='popup-control-but'>
                         <button className='payment-button cancel' onClick={handlePopup}>ยกเลิก</button>
@@ -114,6 +184,33 @@ export default function PaymentPage({ searchParams }: Prop) {
 
                </div>
             )}
+
+            {
+               showAddressForm && (
+                  <div className='popup-background'>
+                     <div className='popup-add-address'>
+
+                        <div className='popup-add-address-head'>เพิ่มที่อยู่</div>
+                        <input type="text" name="name" placeholder="ชื่อ" required onChange={handleChangeNewAddress} />
+                        <input type="tel" name="phone" placeholder="เบอร์" required onChange={handleChangeNewAddress} />
+                        <input type="text" name="houseNumber" placeholder="บ้านเลขที่" required onChange={handleChangeNewAddress} />
+                        <input type="text" name="soi" placeholder="ซอย" required onChange={handleChangeNewAddress} />
+                        <input type="text" name="district" placeholder="ตำบล" required onChange={handleChangeNewAddress} />
+                        <input type="text" name="province" placeholder="จังหวัด" required onChange={handleChangeNewAddress} />
+                        <input type="number" name="postalCode" placeholder="รหัสไปรษณีย์" required onChange={handleChangeNewAddress} />
+
+
+                        <div className='popup-control-but'>
+                           <button className='payment-button cancel' onClick={handleAddAddressForm}>ยกเลิก</button>
+                           <button className='payment-button confirm' type='submit' onClick={handleAddAddress}>เพิ่ม</button>
+                        </div>
+
+
+
+                     </div>
+                  </div>
+               )
+            }
 
 
             {
