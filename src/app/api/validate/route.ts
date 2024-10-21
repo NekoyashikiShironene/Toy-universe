@@ -11,11 +11,12 @@ export async function GET(req: NextRequest) {
 
     let results: ICustomer[] = [];
     if (username)
-        [results] = await connection.query<ICustomer[]>("SELECT username FROM customer WHERE username = ?", [username]);
+        [results] = await connection.query<ICustomer[]>("SELECT username FROM customer WHERE username = ? \
+                                                        UNION SELECT username FROM employee WHERE username = ?", [username, username]);
 
     else if (email)
-        [results] = await connection.query<ICustomer[]>("SELECT email FROM customer WHERE email = ?", [email]);
-
+        [results] = await connection.query<ICustomer[]>("SELECT email FROM customer WHERE email = ? \
+                                                        UNION SELECT email FROM employee WHERE email = ?", [email, email]);
 
 
     await connection.end();
