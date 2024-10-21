@@ -9,3 +9,13 @@ export interface ICustomer extends RowDataPacket {
     tel?: string,
     address?: string,
 }
+
+export interface IUser extends RowDataPacket {
+    id?: number,
+    username?: string,
+    password?: string,
+    name?: string,
+    email?: string,
+    role?: string
+}
+
