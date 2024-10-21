@@ -4,7 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google"
 import connectToDatabase from "@/utils/db";
 import NextCrypto from 'next-crypto';
-import type { ICustomer } from "@/types/db";
+import type { ICustomer, IUser } from "@/types/db";
+import type { ResultSetHeader } from "mysql2";
 
 // type Req = Pick<RequestInternal, "body" | "headers" | "query" | "method">;
 type Credentials = Record<"username" | "password", string> | undefined;
@@ -24,47 +25,40 @@ export const authOptions: AuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             authorize: async (credentials: Credentials) => {
-                
                 if (!credentials)
                     return null;
 
-                
-                // credentials?.username;
-                // credentials?.password;
-                // Add check username & password logic here
-
-                // check username & encrypted password in database
-                // Get email, image path
-
                 const { username } = credentials;
-                
                 const connection = await connectToDatabase();
+                const [results] = await connection.query<ICustomer[]>("SELECT emp_id as id, username, password, name, email, 'emp' AS role \
+                                                                        FROM employee WHERE username=? \
+                                                                        UNION \
+                                                                        SELECT cus_id as id, username, password, name, email, 'cus' AS role \
+                                                                        FROM customer WHERE username=?", [username, username]);
 
-
-                const [ results ]  = await connection.query<ICustomer[]>("SELECT * FROM customer WHERE username = ?", [username]);
-                const crypto = new NextCrypto(process.env.CRYPTO_SECRET ?? "");                
+                const crypto = new NextCrypto(process.env.CRYPTO_SECRET ?? "");
 
                 console.log(results[0]);
-                
-                if (results) {
-                    const password = results[0].password ?? "";
-                    const encrypted = await crypto.encrypt(password); 
+                const result = results[0];
+
+                if (result) {
+                    const password = result.password ?? "";
+                    const encrypted = await crypto.encrypt(password);  //not done yet
                     const decrypted = await crypto.decrypt(encrypted);
                     console.log("decrypt", decrypted);
 
                     const user = {
-                        id: results[0].cus_id?.toString() as string,
-                        name: results[0].name,
-                        email: results[0].email,
-                        image: "/user/" + results[0].username + ".png"
+                        id: result.id?.toString() as string,
+                        name: result.name,
+                        email: result.email,
+                        image: "/user/" + result.username + ".png"
                     }
 
                     return user;
                 }
-                
 
                 return null;
-            } 
+            }
         })
     ],
     callbacks: {
@@ -73,7 +67,7 @@ export const authOptions: AuthOptions = {
         },
 
         async jwt({ token, trigger, session, user, account, profile }) {
-            if (trigger === "update" && session?.name) {
+            if (trigger === "update") {
                 if (session?.name)
                     token.name = session.name
                 if (session?.cart)
@@ -82,40 +76,59 @@ export const authOptions: AuthOptions = {
 
             if (account?.provider === "google") {
                 // get user id from email
-                const { email } = profile;
-                token.id = "1212312121";
-                token.role = "google_admin";
-                token.cart = []
-                //
+                const connection = await connectToDatabase();
+                const email = profile?.email;
+
+                const [results] = await connection.query<IUser[]>("SELECT emp_id as id, username, password, name, email, 'emp' AS role \
+                    FROM employee WHERE email=? \
+                    UNION \
+                    SELECT cus_id as id, username, password, name, email, 'cus' AS role \
+                    FROM customer WHERE email=?", [email, email]);
+
+                const result = results[0];
+
+                let id, role;
+                if (result) {
+                    id = result.id;
+                    role = result.role;
+                } else {
+                    const [result] = await connection.query<ResultSetHeader>("INSERT INTO customer(name, email) VALUES (?, ?)", [profile?.name, email]);
+                    id = result.insertId;
+                    role = "cus";
+                }
+                token.id = id;
+                token.role = role;
+                token.cart = [];
+            
             }
             // Credential
             else if (user) {
+                const connection = await connectToDatabase();
+                const [results] = await connection.query<IUser[]>("SELECT emp_id as id, 'emp' AS role \
+                    FROM employee WHERE emp_id=? \
+                    UNION \
+                    SELECT cus_id as id, 'cus' AS role \
+                    FROM customer WHERE cus_id=?", [user.id, user.id]);
+
+                const result = results[0];
                 token.id = user.id
-                token.role = "credentials_admin";
+                token.role = result.role;
                 token.cart = []
             }
 
-            console.log("token", token);
-            console.log("account", account);
-            console.log("profile", profile);
-            
+           // console.log("token", token);
+           // console.log("account", account);
+           // console.log("profile", profile);
 
             return token
         },
 
         async signIn({ account }) {
-
             if (account?.provider === "google") {
-                return true;
+              return true;
             }
-
-            else if (account?.provider === "credentials") {
-                // Add logic
-                return true;
-            }
-
-            return false;
-        }
+            return true; // Do different verification for other providers that don't have `email_verified`
+          },
     }
 };
 
