@@ -23,7 +23,7 @@ export default function ProductDetailPage({ searchParams }: Prop) {
   useEffect(() => {
     const getProductDetails = async (prod_id: number) => {
       try {
-        const res = await fetch("api/product?prod_id=" + prod_id);
+        const res = await fetch("api/product?prod_ids=" + prod_id);
         const data = (await res.json()).data;
         setProduct(data[0]);
 
