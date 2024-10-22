@@ -14,48 +14,64 @@ type Prop = {
 export default function ProductDetailPage({ searchParams }: Prop) {
   const { data: session, update } = useSession();
 
-  const { prod_id } = searchParams; // ดึง prod_id จาก query params
-  const [ product, setProduct ] = useState<Product | undefined>();
-  const [ quantity, setQuantity ] = useState<number>(1);
-  
+  const productIdParam = searchParams.prod_id as string; // ดึง prod_id จาก query params
+  const prod_id = parseInt(productIdParam);
+
+  const [product, setProduct] = useState<Product | undefined>();
+  const [quantity, setQuantity] = useState<number>(1);
+
   useEffect(() => {
-    const getProductDetails = async (prod_id: string) => {
+    const getProductDetails = async (prod_id: number) => {
       try {
         const res = await fetch("api/product?prod_id=" + prod_id);
         const data = (await res.json()).data;
         setProduct(data[0]);
-        
+
       } catch (error) {
         console.error('Database connection failed:', error);
       }
     };
-    getProductDetails(prod_id as string);
+    getProductDetails(prod_id);
   }, [prod_id]);
 
   const handlePlus = () => {
-    if (!product){
+    if (!product) {
       return;
     }
 
-    if (quantity < product?.quantity){
+    if (quantity < product?.quantity) {
       setQuantity(quantity + 1);
     }
   }
 
   const handleMinus = () => {
-    if (quantity > 1){
+    if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   }
 
   const addProductToCart = () => {
-      const newProduct = {
-        prod_id: prod_id,
-        quantity: quantity
-      };
-      const user = session?.user as UserSession;
-      update({cart: [...(user?.cart), newProduct]});
-      
+    const newProduct = {
+      id: prod_id,
+      quantity: quantity
+    };
+    const user = session?.user as UserSession;
+    const prevCart = user.cart;
+
+    const isItemInCart = prevCart.find((cartItem) => cartItem.id === prod_id)
+    if (isItemInCart) {
+      update({
+        cart: prevCart.map((cartItem) =>
+          cartItem.id === prod_id
+            ? { ...cartItem, quantity: cartItem.quantity + quantity }
+            : cartItem
+        )
+      });
+    } else {
+      update({
+        cart: [...prevCart, newProduct]
+      });
+    }
   }
 
   return (
@@ -76,7 +92,7 @@ export default function ProductDetailPage({ searchParams }: Prop) {
         <p className="stock">จำนวนสินค้าในคลัง: {product?.quantity} ชิ้น</p>
         <div className="item-quantity">
           <button onClick={handleMinus}>-</button>
-          <input type="number" value={quantity} min={1} max={product?.quantity} readOnly/>
+          <input type="number" value={quantity} min={1} max={product?.quantity} readOnly />
           <button onClick={handlePlus}>+</button>
         </div>
         <button className="add-to-cart" onClick={addProductToCart}>เพิ่มลงในตะกร้า</button>
