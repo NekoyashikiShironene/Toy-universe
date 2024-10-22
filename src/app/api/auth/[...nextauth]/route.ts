@@ -37,8 +37,6 @@ export const authOptions: AuthOptions = {
                                                                         FROM customer WHERE username=?", [username, username]);
 
                 const crypto = new NextCrypto(process.env.CRYPTO_SECRET ?? "");
-
-                console.log(results[0]);
                 const result = results[0];
 
                 if (result) {
@@ -120,9 +118,6 @@ export const authOptions: AuthOptions = {
                 token.cart = []
             }
 
-           // console.log("token", token);
-           // console.log("account", account);
-           // console.log("profile", profile);
 
             return token
         },
