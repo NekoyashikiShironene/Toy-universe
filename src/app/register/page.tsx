@@ -40,12 +40,12 @@ export default function Register() {
                 const res = await fetch('api/validate?username=' + username);
                 const valid = (await res.json()).valid;
                 
-                //check pattern
+                
                 if (username_input.validity.patternMismatch) {
-                    setUserError({value: true, message: 'Pattern incorrect'});
+                    setUserError({value: true, message: 'Must start with a letter and be 6 to 20 characters long, containing only letters, digits, or underscores.'});
                     username_input.style.borderColor = 'rgb(247, 60, 60)';                  
                 }
-                //check if exist or not
+                
                 else if (valid && username_input.value) {
                     username_input.style.borderColor = 'rgb(247, 60, 60)'; // red
                     setUserError({value: true, message: 'Username already exists'});
@@ -73,7 +73,7 @@ export default function Register() {
                 const valid = (await res.json()).valid;
                 
                 if (!email_input.validity.valid) {
-                    setEmailError({value: true, message: 'Pattern incorrect'});
+                    setEmailError({value: true, message: "Invalid email format. Must contain a username, '@', domain, and top-level domain."});
                     email_input.style.borderColor = 'rgb(247, 60, 60)';    
                 }
 
