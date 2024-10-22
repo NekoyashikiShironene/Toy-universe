@@ -16,7 +16,7 @@ export default function PaymentPage({ searchParams }: Prop) {
 
    useEffect(() => {
       async function fetchProduct() {
-         const res = await fetch("/api/product?prod_id=" + prod_id);
+         const res = await fetch("/api/product?prod_ids=" + prod_id);
          const data = (await res.json()).data[0];
          setProduct(data);
       }
