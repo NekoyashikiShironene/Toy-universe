@@ -28,7 +28,7 @@ export const authOptions: AuthOptions = {
                 if (!credentials)
                     return null;
 
-                const { username } = credentials;
+                const { username, password } = credentials;
                 const connection = await connectToDatabase();
                 const [results] = await connection.query<ICustomer[]>("SELECT emp_id as id, username, password, name, email, 'emp' AS role \
                                                                         FROM employee WHERE username=? \
@@ -42,19 +42,23 @@ export const authOptions: AuthOptions = {
                 const result = results[0];
 
                 if (result) {
-                    const password = result.password ?? "";
-                    const encrypted = await crypto.encrypt(password);  //not done yet
-                    const decrypted = await crypto.decrypt(encrypted);
-                    console.log("decrypt", decrypted);
+                    const encryptedPassword = result.password ?? "";
+                    const decryptedPassword = await crypto.decrypt(encryptedPassword);
+                    
+                    console.log("decrypt", decryptedPassword);
 
-                    const user = {
-                        id: result.id?.toString() as string,
-                        name: result.name,
-                        email: result.email,
-                        image: "/user/" + result.username + ".png"
+                    if (password === decryptedPassword) {
+                        const user = {
+                            id: result.id?.toString() as string,
+                            name: result.name,
+                            email: result.email,
+                            image: "/user/" + result.username + ".png"
+                        }
+
+                        return user;
                     }
-
-                    return user;
+                    
+                    return null;
                 }
 
                 return null;

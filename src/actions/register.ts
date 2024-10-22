@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import connectToDatabase from "@/utils/db";
+import NextCrypto from 'next-crypto';
 
 export async function register(prevState: any, formData: FormData) {
     const username = formData.get('username') as string;
@@ -11,16 +12,19 @@ export async function register(prevState: any, formData: FormData) {
     const tel = formData.get('tel') as string;
     const address = formData.get('address') as string;
 
-
     // Now you can use these variables in your function
-    console.log(username, password, name, email, tel, address);
+    // console.log(username, password, name, email, tel, address);
 
+    const key = process.env.CRYPTO_SECRET as string;
+
+    const crypto = new NextCrypto(key);
+    const encryptedPassword = await crypto.encrypt(password);
     
     const connection = await connectToDatabase();
 
     try {
         await connection.query("INSERT INTO customer (username, password, name, email, tel, address) \
-                                                VALUES(?, ?, ?, ?, ?, ?)", [username, password, name, email, tel, address]);
+                                                VALUES(?, ?, ?, ?, ?, ?)", [username, encryptedPassword, name, email, tel, address]);
     } catch (e: unknown) {
         console.error(e);
         return {
