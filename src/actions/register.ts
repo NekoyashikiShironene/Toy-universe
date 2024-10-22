@@ -11,10 +11,6 @@ export async function register(prevState: any, formData: FormData) {
     const tel = formData.get('tel') as string;
     const address = formData.get('address') as string;
 
-    return {
-        message: "Registration failed"
-    }
-
 
     // Now you can use these variables in your function
     console.log(username, password, name, email, tel, address);
@@ -23,14 +19,16 @@ export async function register(prevState: any, formData: FormData) {
     const connection = await connectToDatabase();
 
     try {
-        const [ result ] = await connection.query("INSERT INTO customer (username, password, name, email, tel, address) \
+        await connection.query("INSERT INTO customer (username, password, name, email, tel, address) \
                                                 VALUES(?, ?, ?, ?, ?, ?)", [username, password, name, email, tel, address]);
-        redirect("/login");
     } catch (e: unknown) {
+        console.error(e);
         return {
             message: "Registration failed"
         }
     }
+
+    redirect("/login");
 
 }
 
