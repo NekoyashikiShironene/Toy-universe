@@ -1,22 +1,22 @@
 "use client"
 import React from 'react';
 import Image from 'next/image';
-import { Product } from '../types/products';
-import { ScreenContainer, ContentContainer } from './Containers';
-import { useState, useEffect } from "react";
+import type { TCartItem } from '../types/products';
 import "../styles/cart.css";
 
-
-function Item({ item, checkedItems, handleItemcheck, index }: 
+export function CartItem({ item, handleCheck, handleRemove, handleUpdateQuantity }:
   { 
-    item: Product, 
-    checkedItems: boolean[], 
-    handleItemcheck: (i: number) => void, 
-    index: number 
-  }) {
+    item: TCartItem,
+    handleCheck: (cartItem: TCartItem, checked: boolean) => void,
+    handleRemove: (cartItem: TCartItem) => void
+    handleUpdateQuantity: (CartItem: TCartItem, quantity: number) => void
+  }
+)
+
+ {
   return (
     <div className="cart-item" onClick={() => { }}>
-      <input className='item-checkbox' type="checkbox" checked={checkedItems[index]} onChange={() => handleItemcheck(index)} />
+      <input className='item-checkbox' type="checkbox" checked={item.checked} onChange={(e) => handleCheck(item, e.target.checked)} />
       <Image
         src={`/products/${item.prod_id}.jpg`}
         alt={item.prod_name}
@@ -29,93 +29,16 @@ function Item({ item, checkedItems, handleItemcheck, index }:
         <div className="item-price">
           <p className="">{item.price + ""}</p>
           <div className="item-quantity">
-            <button>-</button>
-            <p className="">{item.quantity}</p>
-            <button>+</button>
+            <button onClick={() => handleUpdateQuantity(item, item.quantity - 1)}>-</button>
+            <input type='number' value={item.quantity} min='1' max='' />
+            <button onClick={() => handleUpdateQuantity(item, item.quantity + 1)}>+</button>
           </div>
+          <p className='delete-item' onClick={() => handleRemove(item)}>ลบ</p>
         </div>
-
       </div>
     </div>
   )
 }
-
-export function CartItems({ products }: { products: Product[] }) {
-
-  const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [checkedItems, setCheckItems] = useState<boolean[]>(Array(products.length).fill(false));
-  const [totalprice, setTotalPrice] = useState<number>(0);
-
-  const handleSelectAll = () => {
-
-    setSelectAll(!selectAll);
-    setCheckItems(Array(products.length).fill(!selectAll));
-  };
-
-  const handleItemcheck = (index: number) => {
-    const updatedCheckedItems = [...checkedItems];
-    updatedCheckedItems[index] = !updatedCheckedItems[index]
-    setCheckItems(updatedCheckedItems);
-  }
-
-  //  const totalPrice: number = products.reduce((acc: number, item: any) => {
-  //    return acc + item.price * item.quantity;
-
-  //  }, 0);
-
-
-  useEffect(() => {
-    updateTotalPrice();
-  }, [checkedItems]);
-
-  const updateTotalPrice = () => {
-    let total = 0;
-    products.forEach((item: Product, index: number) => {
-      if (checkedItems[index]) {
-        total += item.price * item.quantity;
-      }
-    });
-    setTotalPrice(total);
-  };
-
-  return (
-    <>
-        <div className="cart-page">
-          <div className="cart-container">
-            <div className="cart-item-list"></div>
-
-            <input className='select-all-box' id='select-all' type="checkbox" checked={selectAll} onChange={handleSelectAll} />
-
-            {
-              products.map((item: Product, index: number) => (
-                <>
-                  <Item key={index} item={item} checkedItems={checkedItems} handleItemcheck={handleItemcheck} index={index} />
-                  <Item key={index} item={item} checkedItems={checkedItems} handleItemcheck={handleItemcheck} index={index} />
-                  <Item key={index} item={item} checkedItems={checkedItems} handleItemcheck={handleItemcheck} index={index} />
-                  <Item key={index} item={item} checkedItems={checkedItems} handleItemcheck={handleItemcheck} index={index} />
-                </>
-                
-              ))
-
-            }
-          </div>
-          <div className="cart-item-summary">
-
-            <button className="checkout-btn">
-              <p>{"3 items " + totalprice + " ฿"}</p>
-              <p>Proceed to payment</p>
-            </button>
-          </div>
-        </div>
-    </>
-  )
-}
-
-
-
-
-
-
 
 
 
