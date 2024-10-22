@@ -7,3 +7,7 @@ export type Product = {
     price: number;         
     quantity: number;      
 }
+
+export type TCartItem = Product & {
+    checked?: boolean
+}
