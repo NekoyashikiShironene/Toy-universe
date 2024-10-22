@@ -42,8 +42,6 @@ export const authOptions: AuthOptions = {
                 if (result) {
                     const encryptedPassword = result.password ?? "";
                     const decryptedPassword = await crypto.decrypt(encryptedPassword);
-                    
-                    console.log("decrypt", decryptedPassword);
 
                     if (password === decryptedPassword) {
                         const user = {
