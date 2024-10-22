@@ -6,16 +6,23 @@ import connectToDatabase from "@/utils/db";
 // http://localhost:3000/api/product?prod_id=1001
 
 export async function GET(req: NextRequest) {
-    const prod_id = req.nextUrl.searchParams.get('prod_id');
+    const prodIds = req.nextUrl.searchParams.get('prod_ids');
     
-    const connection = await connectToDatabase();
+    if (!prodIds) {
+        return NextResponse.json({ error: 'No product IDs provided' }, { status: 400 });
+    }
 
-    
-    const [ results ] = await connection.query("SELECT * FROM product WHERE prod_id = ?", [prod_id]);
-    
-    
+    const prodIdArray = prodIds.split(',').map(id => id.trim());
+
+    const connection = await connectToDatabase();
+    const placeholders = prodIdArray.map(() => '?').join(',');
+
+    const [results] = await connection.query(
+        `SELECT * FROM product WHERE prod_id IN (${placeholders})`,
+        prodIdArray
+    );
+
     await connection.end();
-    
-    
-    return NextResponse.json({data: results});
+
+    return NextResponse.json({ data: results });
 }
