@@ -1,4 +1,7 @@
-export type CartItem = number;
+export type CartItem = {
+    id: number,
+    quantity: number
+};
 
 export type UserSession = {
     name: string,
