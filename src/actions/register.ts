@@ -12,8 +12,6 @@ export async function register(prevState: any, formData: FormData) {
     const tel = formData.get('tel') as string;
     const address = formData.get('address') as string;
 
-    // Now you can use these variables in your function
-    // console.log(username, password, name, email, tel, address);
 
     const key = process.env.CRYPTO_SECRET as string;
 
