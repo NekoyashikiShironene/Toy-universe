@@ -6,6 +6,7 @@ import "../../styles/detail.css";
 import Link from 'next/link';
 import { useSession } from "next-auth/react";
 import { UserSession } from '@/types/session';
+import { useRouter } from 'next/navigation';
 
 type Prop = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -13,6 +14,7 @@ type Prop = {
 
 export default function ProductDetailPage({ searchParams }: Prop) {
   const { data: session, update } = useSession();
+  const router = useRouter();
 
   const productIdParam = searchParams.prod_id as string; // ดึง prod_id จาก query params
   const prod_id = parseInt(productIdParam);
@@ -57,6 +59,7 @@ export default function ProductDetailPage({ searchParams }: Prop) {
     };
     const user = session?.user as UserSession;
     const prevCart = user.cart;
+    
 
     const isItemInCart = prevCart.find((cartItem) => cartItem.id === prod_id)
     if (isItemInCart) {
@@ -72,6 +75,8 @@ export default function ProductDetailPage({ searchParams }: Prop) {
         cart: [...prevCart, newProduct]
       });
     }
+
+    router.push('/cart');
   }
 
   return (
