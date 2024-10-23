@@ -9,6 +9,7 @@ import { ContentContainer } from '@/components/Containers';
 import { Product } from '@/types/products';
 import { UserSession } from '@/types/session';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 
 export default function CartPage() {
@@ -21,15 +22,16 @@ export default function CartPage() {
 
   useEffect(() => {
     async function fetchProducts() {
-      if (!cartItemsSession || status !== 'authenticated' || cartItems.length)
+      if (!cartItemsSession?.length || status !== 'authenticated' || cartItems.length)
         return;
 
       const cartItemIds = cartItemsSession.map(item => item.id.toString()).join(",");
       const res = await fetch("api/product?prod_ids=" + cartItemIds);
-      const datas = (await res.json()).data;
+      const datas = (await res.json()).data ?? [];
 
       setCartItems(datas.map((data: Product) => {
         const quantity = cartItemsSession.find(item => item.id === data.prod_id)?.quantity
+
         return {
           ...data,
           checked: false,
@@ -75,8 +77,11 @@ export default function CartPage() {
 
   const handleCheckout = () => {
     const url = new URL(process.env.NEXT_PUBLIC_URL + "/payment");
-
     const checkedCartItems = cartItems.filter(item => item.checked);
+
+    if (!checkedCartItems.length)
+      return;
+    
     const cartItemIds = checkedCartItems.map(item => item.prod_id.toString()).join(",");
     const cartItemQuantities = checkedCartItems.map(item => item.quantity.toString()).join(",");
 
@@ -87,8 +92,12 @@ export default function CartPage() {
   }
 
   const handleUpdateQuantity = (cartItem: TCartItem, quantity: number) => {
-    if (quantity < 1)
+    if (quantity < 1){
+      handleRemove(cartItem);
       return;
+    }
+
+      
     update({
       cart: cartItemsSession.map(item =>
         cartItem.prod_id === item.id
@@ -108,29 +117,31 @@ export default function CartPage() {
 
   return (
     <ContentContainer>
-      <h1>Shopping Cart</h1>
-      <div className="cart-page"></div>
-      <div className="cart-container">
-        <div className="cart-item-list"></div>
+      <div className="cart-bg">
+        <h1>Shopping Cart</h1>
+        <div className="cart-container">
+          <input className='select-all-box' id='select-all' type="checkbox" onChange={e => handleCheckAll(e.target.checked)} />
+          <span>Select All</span>
+          {
+            cartItems.map((item: TCartItem, index: number) => (
+              <CartItem key={index} item={item} handleCheck={handleCheck} handleRemove={handleRemove} handleUpdateQuantity={handleUpdateQuantity} />
+            ))
 
-        <input className='select-all-box' id='select-all' type="checkbox" onChange={e => handleCheckAll(e.target.checked)} />
-        {
-          cartItems.map((item: TCartItem, index: number) => (
-            <CartItem key={index} item={item} handleCheck={handleCheck} handleRemove={handleRemove} handleUpdateQuantity={handleUpdateQuantity} />
-          ))
+          }
+        </div>
+        
+        <div className="cart-item-summary">
+          <p className="text-total-price">{`${cartItems.filter(item => item.checked).length} items (${totalprice} ฿)`}</p>
+          <p className="text-summary">Shipping, taxes, and discounts will be calculated at checkout</p>
+          <div className="btn-container">
+            <Link className="continue-shopping-btn" href="/products">Continue Shopping</Link>
+            <button className="checkout-btn" onClick={() => handleCheckout()}>Checkout</button>
+          </div>
 
-        }
-      </div>
-
-      <div className="cart-item-summary">
-        <h3 className="text-summary">{`${cartItems.filter(item => item.checked).length} items (${totalprice} ฿)`}</h3>
-        <p className="text-summary">Shipping, taxes, and discounts will be calculated at checkout</p>
-        <div className="btn-container">
-          <button className="continue-shopping-btn">Continue Shopping</button>
-          <button className="checkout-btn" onClick={() => handleCheckout()}>Checkout</button>
         </div>
 
-      </div>
+      </div >
     </ContentContainer >
+
   )
 }
