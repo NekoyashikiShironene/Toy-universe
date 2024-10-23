@@ -1,6 +1,5 @@
 import connectToDatabase from "@/utils/db";
 import ImageSlider from "@/components/ImageSlider";
-import DummyButton from "@/components/DummyButton";
 import Search from "@/components/SearchBar";
 import { ScreenContainer } from "@/components/Containers";
 import "../styles/home.css";
@@ -37,7 +36,6 @@ export default async function Home() {
     <ScreenContainer>
       <Search type="mobile" />
       <ImageSlider/>
-      <DummyButton />
     </ScreenContainer>
   );
 }
