@@ -25,16 +25,12 @@ export function CartItem({ item, handleCheck, handleRemove, handleUpdateQuantity
         className="item-image"
       />
       <div className="item-info">
-        <p className="item-name">{item.prod_name}</p>
-        <div className="item-price">
-          <p className="">{item.price + ""}</p>
-          <div className="item-quantity">
-            <button onClick={() => handleUpdateQuantity(item, item.quantity - 1)}>-</button>
-            <input type='number' value={item.quantity} min='1' max='' />
-            <button onClick={() => handleUpdateQuantity(item, item.quantity + 1)}>+</button>
-          </div>
-          <p className='delete-item' onClick={() => handleRemove(item)}>ลบ</p>
+        <h2 className="item-name">{item.prod_name}</h2>
+        <div className="item-price-manager">
+          <span className="item-price">{item.price + "฿"}</span>
+          <input type='number' value={item.quantity} max={item.remaining} onChange={(e) => handleUpdateQuantity(item, parseInt(e.target.value))} className="item-quantity" />
         </div>
+        <span className='delete-item' onClick={() => handleRemove(item)}>ลบ</span>
       </div>
     </div>
   )
