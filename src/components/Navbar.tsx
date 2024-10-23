@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Search from "./SearchBar";
 import MobileMenu from "./MobileMenu";
 import "../styles/mobile_menu.css";
@@ -16,7 +17,7 @@ const brands = ['LEGO', 'Mattel', 'American Girl', 'Disney', 'LOL Surprise', 'Ha
 export default function Navbar() {
     const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
     const { data: session } = useSession();
-
+    const [imgSrc, setImgSrc] = useState<string>("");
 
     useEffect(() => {
         let prevScrollpos = window.scrollY;
@@ -99,10 +100,18 @@ export default function Navbar() {
                         {
                             session?.user ? (
                                 <>
-                                    <Link href="/cart" className="cart">
+                                    <Link href="/cart" className="cart-icon">
                                         <FaShoppingCart size={35} color={'#C0EEF2'} />
                                     </Link>
-                                    Profile
+                                    <Link href="/profile">
+                                        <Image
+                                            src={session.user.image ?? "/user/default/default.jpg"}
+                                            alt={session.user.name ?? ""}
+                                            width={30}
+                                            height={30}
+                                            className="profile-picture"
+                                        />
+                                    </Link>
                                     <LogoutButton />
                                 </>
                             ) : (
