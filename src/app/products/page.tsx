@@ -1,15 +1,12 @@
 import React from 'react'
-import Image from 'next/image';
-import type { Product } from '@/types/products';
+import { ContentContainer } from '@/components/Containers';
 import { ProductCards } from '@/components/ProductCard';
 
 type Prop = {
     searchParams: { [key: string]: string | string[] | undefined }
 }
 
-
-
-export default async function productsPage({ searchParams }: Prop) {
+export default async function ProductsPage({ searchParams }: Prop) {
     const query = searchParams.query as string;
     const category = searchParams.category as string;
     const brand = searchParams.brand as string;
