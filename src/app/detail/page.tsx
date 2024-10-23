@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import type { Product } from '../../types/products';
@@ -19,7 +20,15 @@ export default function ProductDetailPage({ searchParams }: Prop) {
   const productIdParam = searchParams.prod_id as string; // ดึง prod_id จาก query params
   const prod_id = parseInt(productIdParam);
 
-  const [product, setProduct] = useState<Product | undefined>();
+  const [product, setProduct] = useState<Product>({
+    prod_id: 0,       
+    prod_name: "",     
+    category: "",   
+    brand: "",         
+    description: "",    
+    price: 0,         
+    remaining: 0      
+});
   const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
@@ -37,11 +46,7 @@ export default function ProductDetailPage({ searchParams }: Prop) {
   }, [prod_id]);
 
   const handlePlus = () => {
-    if (!product) {
-      return;
-    }
-
-    if (quantity < product?.quantity) {
+    if (quantity < product.remaining) {
       setQuantity(quantity + 1);
     }
   }
@@ -59,7 +64,6 @@ export default function ProductDetailPage({ searchParams }: Prop) {
     };
     const user = session?.user as UserSession;
     const prevCart = user.cart;
-    
 
     const isItemInCart = prevCart.find((cartItem) => cartItem.id === prod_id)
     if (isItemInCart) {
@@ -84,26 +88,26 @@ export default function ProductDetailPage({ searchParams }: Prop) {
       <div className="image-container">
         <Image
           src={`/products/${prod_id}.jpg`}
-          alt={product?.prod_name ?? ""}
+          alt={product.prod_name}
           width={300}
           height={300}
           className="product-image"
         />
       </div>
       <div className="details">
-        <h1 className="product-name">{product?.prod_name}</h1>
-        <p className="product-price">ราคา: <span className="price">{product?.price} บาท</span></p>
-        <p className="product-description">รายละเอียดสินค้า: <br />{product?.description}</p>
-        <p className="stock">จำนวนสินค้าในคลัง: {product?.quantity} ชิ้น</p>
+        <h1 className="product-name">{product.prod_name}</h1>
+        <p className="product-price">Price: <span className="price">{product.price} บาท</span></p>
+        <p className="product-description">Detail: <br />{product.description}</p>
+        <p className="stock">Remaining: {product.remaining} pieces</p>
         <div className="item-quantity">
           <button onClick={handleMinus}>-</button>
-          <input type="number" value={quantity} min={1} max={product?.quantity} readOnly />
+          <input type="number" value={quantity} min={1} max={product.remaining} onChange={(e) => setQuantity(Math.min(product.remaining, parseInt(e.target.value)))}/>
           <button onClick={handlePlus}>+</button>
         </div>
-        <button className="add-to-cart" onClick={addProductToCart}>เพิ่มลงในตะกร้า</button>
-        <Link href={"/payment?prod_id=" + product?.prod_id}>
-          <button type="submit" className="buy">
-            สั่งซื้อ
+        <button className="add-to-cart" onClick={addProductToCart} disabled={product.remaining === 0}>Add to Cart</button>
+        <Link href={"/payment?prod_id=" + product.prod_id}>
+          <button type="submit" className="buy" disabled={product.remaining === 0}>
+            Buy now
           </button>
         </Link>
       </div>
