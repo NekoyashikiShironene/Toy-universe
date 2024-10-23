@@ -39,19 +39,21 @@ export default function CartPage() {
     }
     fetchProducts();
 
-  }, [cartItemsSession, status]);
+  }, [cartItems.length, cartItemsSession, status]);
+
+  useEffect(() => {
+    const totalPrice = cartItems.reduce((sum, item) =>
+      sum + (item.checked ? item.price * item.quantity : 0)
+      , 0);
+    setTotalPrice(totalPrice);
+  }, [cartItems]);
 
   const handleCheckAll = (checked: boolean) => {
-    const totalPrice = cartItems.reduce((itemA, itemB) => itemA + itemB.price * itemB.quantity, 0)
-    setTotalPrice(checked ? totalPrice : 0);
     setCartItems(cartItems.map(item => ({ ...item, checked })));
   }
 
   const handleCheck = (cartItem: TCartItem, checked: boolean) => {
-    if (checked) {
-      setTotalPrice(prev => prev + cartItem.price * cartItem.quantity);
-    } else {
-      setTotalPrice(prev => prev - cartItem.price * cartItem.quantity);
+    if (!checked) {
       const selectAllBox = document.getElementById("select-all") as HTMLInputElement;
       selectAllBox.checked = false;
     }
@@ -67,9 +69,8 @@ export default function CartPage() {
 
   const handleRemove = (cartItem: TCartItem) => {
     const newCartItems = cartItemsSession.filter(item => item.id !== cartItem.prod_id);
-    update({cart: newCartItems});
+    update({ cart: newCartItems });
     setCartItems(cartItems.filter(item => item.prod_id !== cartItem.prod_id));
-    setTotalPrice(prev => prev - cartItem.price * cartItem.quantity);
   }
 
   const handleCheckout = () => {
@@ -96,11 +97,11 @@ export default function CartPage() {
       )
     });
 
-    setCartItems(cartItems.map(item => 
+    setCartItems(cartItems.map(item =>
       cartItem.prod_id === item.prod_id
-          ? { ...item, quantity }
-          : item
-      )
+        ? { ...item, quantity }
+        : item
+    )
     );
   };
 
