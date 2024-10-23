@@ -81,6 +81,23 @@
     background-color: #ef1010;
   }
 
+  .item-quantity {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .item-quantity input {
+    text-align: center;
+  }
+ 
+ .item-quantity button {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    margin: 0 10px;
+    border-radius: 5px;
+ }
 
   @media screen and (min-width: 768px) {
     .product-detail {
