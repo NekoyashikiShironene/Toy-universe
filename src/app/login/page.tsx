@@ -5,10 +5,14 @@ import { useRouter } from 'next/navigation';
 import '../../styles/login.css'
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRef } from 'react';
 
 export default function Login() {
     const { data: session } = useSession();
     const router = useRouter();
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+    const errorRef = useRef<HTMLParagraphElement>(null);
 
     console.log(session);
     if (session) 
@@ -17,11 +21,8 @@ export default function Login() {
     const signInWithCredentials = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const usernameElement = document?.getElementById("username") as HTMLInputElement;
-        const passwordElement = document?.getElementById("password") as HTMLInputElement;
-
-        const username = usernameElement.value;
-        const password = passwordElement.value;
+        const username = usernameRef.current?.value;
+        const password = passwordRef.current?.value;
 
         const result = await signIn("credentials", {
             username, 
@@ -29,8 +30,9 @@ export default function Login() {
             redirect: false
         });
 
-        if (result?.error)
-            alert("Incorrect usename or password");
+        if (result?.error){
+            errorRef.current!.innerHTML = 'Incorrect username or password';
+        }
         else
             router.push("/");
     }
@@ -41,15 +43,16 @@ export default function Login() {
                 <h1>Login</h1>
                 <form onSubmit={e => signInWithCredentials(e)}>
                     <div className="form-input">
-                        <input type="text" id="username" placeholder=" " required />
+                        <input type="text" id="username" placeholder=" " ref={usernameRef} required />
                         <label htmlFor="username">Username</label>
                     </div>
                     <div className="form-input">
-                        <input type="password" placeholder=" " id="password" required /> 
+                        <input type="password" placeholder=" " id="password" ref={passwordRef} required /> 
                         <label htmlFor="password">Password</label>
                     </div>
                     <button type="submit">Login</button> <br />
                 </form>
+                <p className='error-message' ref={errorRef}></p>
 
                 <p>Or login with</p>
                 <button type="submit" onClick={() => signIn("google", { callbackUrl: "/" })}>

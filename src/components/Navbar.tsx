@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Search from "./SearchBar";
@@ -16,27 +16,37 @@ const brands = ['LEGO', 'Mattel', 'American Girl', 'Disney', 'LOL Surprise', 'Ha
 
 export default function Navbar() {
     const [isBurgerOpen, setIsBurgerOpen] = useState<boolean>(false);
-    const { data: session } = useSession();
+    const navRef = useRef<HTMLElement>(null);
+
+    const { data: session, status } = useSession();
     const [imgSrc, setImgSrc] = useState<string>("");
 
+    // add window scroll event
     useEffect(() => {
         let prevScrollpos = window.scrollY;
         window.onscroll = function () {
             const currentScrollPos = window.scrollY;
             if (prevScrollpos > currentScrollPos) {
-                document.querySelector("nav")?.classList.remove("invisible");
+                navRef.current?.classList.remove("invisible");
             } else {
-                document.querySelector("nav")?.classList.add("invisible");
+                navRef.current?.classList.add("invisible");
             }
             prevScrollpos = currentScrollPos;
         }
     }, []);
 
+    // load profile picture
+    useEffect(() => {
+        console.log(status);
+        if (status === "authenticated")
+            setImgSrc(session?.user?.image ?? "")
+    }, [session?.user?.image, status])
+
 
 
     return (
         <>
-            <nav className="visible">
+            <nav className="visible" ref={navRef}>
                 <div>
                     <div className="burger" onClick={() => setIsBurgerOpen(true)}>
                         <div className="layer1"></div>
@@ -98,18 +108,19 @@ export default function Navbar() {
                         </div>
 
                         {
-                            session?.user ? (
+                            status === "authenticated" ? (
                                 <>
                                     <Link href="/cart" className="cart-icon">
                                         <FaShoppingCart size={35} color={'#C0EEF2'} />
                                     </Link>
                                     <Link href="/profile">
                                         <Image
-                                            src={session.user.image ?? "/user/default/default.jpg"}
-                                            alt={session.user.name ?? ""}
+                                            src={imgSrc}
+                                            alt={session?.user?.name ?? ""}
                                             width={30}
                                             height={30}
                                             className="profile-picture"
+                                            onError={() => setImgSrc("/user/default/default.jpg")}
                                         />
                                     </Link>
                                     <LogoutButton />
