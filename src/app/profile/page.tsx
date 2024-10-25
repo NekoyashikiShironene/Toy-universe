@@ -9,20 +9,21 @@ import { UserSession } from '@/types/session';
 
 
 export default async function ProfilePage() {
-  const session = await useSession();
+  const user = (await useSession())?.user as UserSession;
   const connection = await connectToDatabase();
 
   const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username, password, name, email, tel, address, 'cus' AS role \
-                                                          FROM customer WHERE cus_id=?", [(session?.user as UserSession)?.id]);
-
+                                                          FROM customer WHERE cus_id=?", [user.id]);
+  
   connection.release();
 
   //console.log(results);
   const result = results[0];
 
+  const loggedInWithGoogle = user.provider === 'google';
+
   return (
     <ContentContainer>
-
       <div className='profile-content'>
         <form action={updateAccount}>
           <h1>My Profile</h1>
@@ -31,7 +32,7 @@ export default async function ProfilePage() {
 
           <div className='user-info'>
             <p>Username: </p>
-            <input type='text' id='username' name='username' defaultValue={result?.username} readOnly/>
+            <input type='text' className='read-only' name='username' defaultValue={result?.username} readOnly/>
           </div>
 
           <div className='user-info'>
@@ -41,7 +42,7 @@ export default async function ProfilePage() {
 
           <div className='user-info'>
             <p>Email: </p>
-            <input type='email' name='email' defaultValue={result?.email} />
+            <input type='email' name='email' defaultValue={result?.email} readOnly={loggedInWithGoogle} className={loggedInWithGoogle ? 'read-only' : ''} />
           </div>
 
           <div className='user-info'>
