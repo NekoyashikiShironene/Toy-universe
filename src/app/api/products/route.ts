@@ -10,19 +10,32 @@ export async function GET(req: NextRequest) {
     
     const connection = await connectToDatabase();
 
-    let results, fields;
-    if (category){
-        [results, fields] = await connection.query("SELECT * FROM product WHERE category = ?", [category]);
-    }
-    else if (brand){
-        [results, fields] = await connection.query("SELECT * FROM product WHERE brand = ?", [brand]);
-    }
-    else {
-        [results, fields] = await connection.query("SELECT * FROM product");
+    const conditions = [];
+    const values = [];
+
+    if (category) {
+        conditions.push("category = ?");
+        values.push(category);
     }
     
+    if (brand) {
+        conditions.push("brand = ?");
+        values.push(brand);
+    }
+    
+    if (query) {
+        conditions.push("prod_name LIKE ?");
+        values.push(`%${query}%`);
+    }
+
+    let sql = "SELECT * FROM product";
+    
+    if (conditions.length > 0) {
+        sql += " WHERE " + conditions.join(" AND ");
+    }
+
+    const [results] = await connection.query(sql, values);
     connection.release();
     
-    
-    return NextResponse.json({data: results});
+    return NextResponse.json({ data: results });
 }
