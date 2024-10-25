@@ -6,6 +6,7 @@ import connectToDatabase from "@/utils/db";
 import NextCrypto from 'next-crypto';
 import type { ICustomer, IUser } from "@/types/db";
 import type { ResultSetHeader } from "mysql2";
+import { redirect } from 'next/navigation'
 
 // type Req = Pick<RequestInternal, "body" | "headers" | "query" | "method">;
 type Credentials = Record<"username" | "password", string> | undefined;
@@ -64,7 +65,7 @@ export const authOptions: AuthOptions = {
     ],
     callbacks: {
         async session({ session, token }) {
-            return { ...session, user: { ...session.user, id: token.id, role: token.role, cart: token.cart } };
+            return { ...session, user: { ...session.user, id: token.id, role: token.role, cart: token.cart, provider: token.provider } };
         },
 
         async jwt({ token, trigger, session, user, account, profile }) {
@@ -72,11 +73,12 @@ export const authOptions: AuthOptions = {
                 if (session?.name)
                     token.name = session.name
                 if (session?.cart)
-                    token.cart = session.cart;
+                    token.cart = session.cart; 
             }
 
             if (account?.provider === "google") {
                 // get user id from email
+
                 const connection = await connectToDatabase();
                 const email = profile?.email;
 
@@ -85,7 +87,6 @@ export const authOptions: AuthOptions = {
                     UNION \
                     SELECT cus_id as id, username, password, name, email, 'cus' AS role \
                     FROM customer WHERE email=?", [email, email]);
-
 
                 const result = results[0];
 
@@ -101,6 +102,7 @@ export const authOptions: AuthOptions = {
                 token.id = id;
                 token.role = role;
                 token.cart = [];
+                token.provider = account?.provider;
 
                 connection.release();
 
@@ -118,6 +120,8 @@ export const authOptions: AuthOptions = {
                 token.id = user.id
                 token.role = result.role;
                 token.cart = []
+                token.provider = 'credential';
+
                 connection.release();
             }
 
@@ -127,11 +131,12 @@ export const authOptions: AuthOptions = {
 
         async signIn({ account }) {
             if (account?.provider === "google") {
+                
                 return true;
             }
             return true; // Do different verification for other providers that don't have `email_verified`
         },
-    }
+    }   
 };
 
 const handler = NextAuth(authOptions);
