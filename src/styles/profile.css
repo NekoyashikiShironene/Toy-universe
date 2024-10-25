@@ -7,3 +7,12 @@
     margin: 20px auto;
     border-radius: 5px;
 }
+
+.profile-content input {
+    border-radius: 5px;
+}
+
+#username {
+    background-color: rgb(212, 212, 212);
+    pointer-events: none;
+}
