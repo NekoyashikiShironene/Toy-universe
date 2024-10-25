@@ -12,7 +12,9 @@
     border-radius: 5px;
 }
 
-#username {
-    background-color: rgb(212, 212, 212);
+.read-only {
+    background-color: rgb(170, 169, 169);
     pointer-events: none;
 }
+
+
