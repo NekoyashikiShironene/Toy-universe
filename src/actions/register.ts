@@ -28,6 +28,8 @@ export async function register(prevState: any, formData: FormData) {
         return {
             message: "Registration failed"
         }
+    } finally {
+        connection.release();
     }
 
     redirect("/login");
