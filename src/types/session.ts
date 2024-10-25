@@ -9,5 +9,6 @@ export type UserSession = {
     image: string,
     id: string,
     role: string,
-    cart: CartItem[]
+    cart: CartItem[],
+    provider: string
 }
