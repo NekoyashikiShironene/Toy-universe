@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
     connection.release();
 
-    const valid = (results.length !== 0);
+    const value = (results.length !== 0);
 
-    return NextResponse.json({ valid });
+    return NextResponse.json({ value });
 }
