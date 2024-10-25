@@ -4,7 +4,7 @@ import '../../styles/profile.css';
 import useSession from '../../utils/auth';
 import connectToDatabase from "@/utils/db";
 import { updateAccount } from '@/actions/updateAccount';
-import type { ICustomer, IUser } from "@/types/db";
+import type { IUser } from "@/types/db";
 import { UserSession } from '@/types/session';
 
 
@@ -15,7 +15,7 @@ export default async function ProfilePage() {
   const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username, password, name, email, tel, address, 'cus' AS role \
                                                           FROM customer WHERE cus_id=?", [(session?.user as UserSession)?.id]);
 
-  connection.release();
+  connection.end();
 
   //console.log(results);
   const result = results[0];

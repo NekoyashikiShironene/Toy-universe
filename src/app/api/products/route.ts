@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
         [results, fields] = await connection.query("SELECT * FROM product");
     }
     
-    await connection.end();
+    connection.end();
     
     
     return NextResponse.json({data: results});

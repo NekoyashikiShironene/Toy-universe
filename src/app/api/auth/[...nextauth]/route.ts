@@ -35,6 +35,7 @@ export const authOptions: AuthOptions = {
                                                                         UNION \
                                                                         SELECT cus_id as id, username, password, name, email, 'cus' AS role \
                                                                         FROM customer WHERE username=?", [username, username]);
+                connection.release();
 
                 const crypto = new NextCrypto(process.env.CRYPTO_SECRET ?? "");
                 const result = results[0];
@@ -48,12 +49,12 @@ export const authOptions: AuthOptions = {
                             id: result.id?.toString() as string,
                             name: result.name,
                             email: result.email,
-                            image: "/user/" + result.username + ".png"
+                            image: null
                         }
 
                         return user;
                     }
-                    
+
                     return null;
                 }
 
@@ -85,6 +86,7 @@ export const authOptions: AuthOptions = {
                     SELECT cus_id as id, username, password, name, email, 'cus' AS role \
                     FROM customer WHERE email=?", [email, email]);
 
+
                 const result = results[0];
 
                 let id, role;
@@ -99,7 +101,9 @@ export const authOptions: AuthOptions = {
                 token.id = id;
                 token.role = role;
                 token.cart = [];
-            
+
+                connection.release();
+
             }
             // Credential
             else if (user) {
@@ -114,6 +118,7 @@ export const authOptions: AuthOptions = {
                 token.id = user.id
                 token.role = result.role;
                 token.cart = []
+                connection.release();
             }
 
 
@@ -122,10 +127,10 @@ export const authOptions: AuthOptions = {
 
         async signIn({ account }) {
             if (account?.provider === "google") {
-              return true;
+                return true;
             }
             return true; // Do different verification for other providers that don't have `email_verified`
-          },
+        },
     }
 };
 
