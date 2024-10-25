@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
         prodIdArray
     );
 
-    connection.end();
+    connection.release();
 
     return NextResponse.json({ data: results });
 }

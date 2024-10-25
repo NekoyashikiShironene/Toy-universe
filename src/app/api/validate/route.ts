@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
                                                         UNION SELECT email FROM employee WHERE email = ?", [email, email]);
 
 
-    connection.end();
+    connection.release();
 
     const valid = (results.length !== 0);
 

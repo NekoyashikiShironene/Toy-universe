@@ -15,7 +15,7 @@ export default async function ProfilePage() {
   const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username, password, name, email, tel, address, 'cus' AS role \
                                                           FROM customer WHERE cus_id=?", [(session?.user as UserSession)?.id]);
 
-  connection.end();
+  connection.release();
 
   //console.log(results);
   const result = results[0];
@@ -31,7 +31,7 @@ export default async function ProfilePage() {
 
           <div className='user-info'>
             <p>Username: </p>
-            <input type='text' name='username' defaultValue={result?.username} />
+            <input type='text' id='username' name='username' defaultValue={result?.username} readOnly/>
           </div>
 
           <div className='user-info'>
