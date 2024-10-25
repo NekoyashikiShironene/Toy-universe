@@ -28,3 +28,18 @@ product-img {
     object-fit: cover;
 }
 
+
+/* --------- Home page ------------- */
+.show-product-home{
+background-color: #f0e2d7;
+    
+}
+
+.topic-product{
+    padding: 2% 10%;
+    
+}
+
+.topic-product:hover{
+    background-color: rgb(224, 203, 187);
+}
