@@ -5,19 +5,21 @@ import connectToDatabase from './utils/db';
 import { IUser } from './types/db';
 
 export async function middleware(request: NextRequest) {
+  
+  if (request.nextUrl.pathname.startsWith("/_next")) 
+    return NextResponse.next();
+  
   const token = await getToken({
     req: request,
     secret: process.env.SESSION_SECRET
   });
 
   if (token?.provider === "google" && token?.role === "cus") {
-    const connection = await connectToDatabase();
-    const [results] = await connection.query<IUser[]>("SELECT username FROM customer WHERE cus_id = ?", [token.id]);
-    const result = results[0];
-    connection.release();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/validate/isempty?attr=username&id=${token.id}`);
+    const empty = (await res.json())?.value
 
-    if (!result.username) {
-      return NextResponse.redirect('/set-username');
+    if (empty) {
+      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/set-username`);
     }
 
   }
@@ -26,5 +28,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!set-username))"],
+  matcher: ["/((?!set-username).*)"],
 }
