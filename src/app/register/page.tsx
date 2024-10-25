@@ -30,7 +30,6 @@ export default function Register() {
 
     const [state, formAction] = useFormState(register, null);
 
-
     useEffect(() => {
         const validateUsername = async () => {
             const username_input = document.getElementById("username") as HTMLInputElement;
@@ -38,7 +37,7 @@ export default function Register() {
 
             if (username_input.value) {
                 const res = await fetch('api/validate?username=' + username);
-                const valid = (await res.json()).valid;
+                const existed = (await res.json()).value;
                 
                 
                 if (username_input.validity.patternMismatch) {
@@ -46,7 +45,7 @@ export default function Register() {
                     username_input.style.borderColor = 'rgb(247, 60, 60)';                  
                 }
                 
-                else if (valid && username_input.value) {
+                else if (existed && username_input.value) {
                     username_input.style.borderColor = 'rgb(247, 60, 60)'; // red
                     setUserError({value: true, message: 'Username already exists'});
                 }
@@ -70,14 +69,14 @@ export default function Register() {
             
             if (email) {
                 const res = await fetch('api/validate?email=' + email);
-                const valid = (await res.json()).valid;
+                const existed = (await res.json()).value;
                 
                 if (!email_input.validity.valid) {
                     setEmailError({value: true, message: "Invalid email format. Must contain a username, '@', domain, and top-level domain."});
                     email_input.style.borderColor = 'rgb(247, 60, 60)';    
                 }
 
-                else if (valid && email_input.value) {
+                else if (existed && email_input.value) {
                     email_input.style.borderColor = 'rgb(247, 60, 60)';
                     setEmailError({value: true, message: 'Email already exists'});
                 }
