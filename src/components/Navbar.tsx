@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import Search from "./SearchBar";
 import MobileMenu from "./MobileMenu";
 import "../styles/mobile_menu.css";
+import ProfilePicture from "./ProfilePicture";
 import { LoginButton, LogoutButton } from "./SignButton";
 
 import { FaShoppingCart } from "react-icons/fa";
@@ -19,7 +19,6 @@ export default function Navbar() {
     const navRef = useRef<HTMLElement>(null);
 
     const { data: session, status } = useSession();
-    const [imgSrc, setImgSrc] = useState<string>("");
 
     // add window scroll event
     useEffect(() => {
@@ -34,15 +33,6 @@ export default function Navbar() {
             prevScrollpos = currentScrollPos;
         }
     }, []);
-
-    // load profile picture
-    useEffect(() => {
-        console.log(status);
-        if (status === "authenticated")
-            setImgSrc(session?.user?.image ?? "")
-    }, [session?.user?.image, status])
-
-
 
     return (
         <>
@@ -114,13 +104,9 @@ export default function Navbar() {
                                         <FaShoppingCart size={35} color={'#C0EEF2'} />
                                     </Link>
                                     <Link href="/profile">
-                                        <Image
-                                            src={imgSrc}
-                                            alt={session?.user?.name ?? ""}
-                                            width={30}
-                                            height={30}
-                                            className="profile-picture"
-                                            onError={() => setImgSrc("/user/default/default.jpg")}
+                                        <ProfilePicture
+                                            src={session?.user?.image ?? ""}
+                                            width={30} height={30}
                                         />
                                     </Link>
                                     <LogoutButton />
