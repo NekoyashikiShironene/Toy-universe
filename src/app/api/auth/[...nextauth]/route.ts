@@ -6,7 +6,6 @@ import connectToDatabase from "@/utils/db";
 import NextCrypto from 'next-crypto';
 import type { ICustomer, IUser } from "@/types/db";
 import type { ResultSetHeader } from "mysql2";
-import { redirect } from 'next/navigation'
 
 // type Req = Pick<RequestInternal, "body" | "headers" | "query" | "method">;
 type Credentials = Record<"username" | "password", string> | undefined;
@@ -36,7 +35,6 @@ export const authOptions: AuthOptions = {
                                                                         UNION \
                                                                         SELECT cus_id as id, username, password, name, email, 'cus' AS role \
                                                                         FROM customer WHERE username=?", [username, username]);
-                connection.release();
 
                 const crypto = new NextCrypto(process.env.CRYPTO_SECRET ?? "");
                 const result = results[0];
@@ -50,7 +48,7 @@ export const authOptions: AuthOptions = {
                             id: result.id?.toString() as string,
                             name: result.name,
                             email: result.email,
-                            image: null
+                            image: `/users/${result.id}.jpg`
                         }
 
                         return user;
@@ -122,7 +120,6 @@ export const authOptions: AuthOptions = {
                 token.cart = []
                 token.provider = 'credential';
 
-                connection.release();
             }
 
 

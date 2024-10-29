@@ -14,7 +14,6 @@ export async function GET(req: NextRequest) {
         [results] = await connection.query<IUser[]>("SELECT username, password, name, email, tel FROM customer WHERE cus_id = ? \
                                                         UNION SELECT username, password, name, email, tel FROM employee WHERE emp_id = ?", [id, id]);
 
-    connection.release();
 
     const user = (results[0] as IUser)
     const value = user ? !user[attribute] : true;

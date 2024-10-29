@@ -18,8 +18,6 @@ export async function setUsername(formData: FormData) {
         return {
             message: "Failed to set username"
         }
-    }finally {
-        connection.release();
     }
 
     redirect("/");

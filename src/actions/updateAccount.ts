@@ -27,8 +27,6 @@ export async function updateAccount(formData: FormData) {
         return {
             message: "Registration failed"
         }
-    }finally {
-        connection.release();
     }
 
     redirect("/profile");

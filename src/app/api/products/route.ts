@@ -35,7 +35,6 @@ export async function GET(req: NextRequest) {
     }
 
     const [results] = await connection.query(sql, values);
-    connection.release();
     
     return NextResponse.json({ data: results });
 }

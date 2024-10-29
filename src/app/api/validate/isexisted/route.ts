@@ -4,6 +4,7 @@ import connectToDatabase from "@/utils/db";
 import type { ICustomer } from "@/types/db";
 
 export async function GET(req: NextRequest) {
+    
     const username = req.nextUrl.searchParams.get('username');
     const email = req.nextUrl.searchParams.get('email');
 
@@ -19,7 +20,6 @@ export async function GET(req: NextRequest) {
                                                         UNION SELECT email FROM employee WHERE email = ?", [email, email]);
 
 
-    connection.release();
 
     const value = (results.length !== 0);
 

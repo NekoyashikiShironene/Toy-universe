@@ -13,8 +13,6 @@ export default async function AccountInfo() {
 
   const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username FROM customer WHERE cus_id=?", [(session?.user as UserSession)?.id]);
 
-  connection.release();
-
   //console.log(results);
   const result = results[0];
 

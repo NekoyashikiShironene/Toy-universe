@@ -22,7 +22,6 @@ export async function GET(req: NextRequest) {
         prodIdArray
     );
 
-    connection.release();
 
     return NextResponse.json({ data: results });
 }
