@@ -8,7 +8,7 @@
     height: 100%;
     transform: translateX(-105%);
     transition: 0.25s ease-in-out;
-    z-index: 11;
+    z-index: 20;
     box-shadow: 1px 1px 10px rgb(134, 133, 133);
 }
 
