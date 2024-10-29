@@ -24,10 +24,13 @@ export default function Register() {
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [name, setName] = useState<string>('');
+    const [address, setAddress] = useState<string>('');
+    const [tel, setTel] = useState<string>('');
     const [userError, setUserError] = useState<InputError>({value: false, message: ""});
     const [emailError, setEmailError] = useState<InputError>({value: false, message: ""});
     const [passwordError, setPasswordError] = useState<InputError>({value: false, message: ""});
-
+    
     const [state, formAction] = useFormState(register, null);
 
     useEffect(() => {
@@ -36,7 +39,7 @@ export default function Register() {
             const username = username_input.value;
 
             if (username_input.value) {
-                const res = await fetch('api/validate?username=' + username);
+                const res = await fetch('api/validate/isexisted?username=' + username);
                 const existed = (await res.json()).value;
                 
                 
@@ -68,7 +71,7 @@ export default function Register() {
             const email = email_input.value;
             
             if (email) {
-                const res = await fetch('api/validate?email=' + email);
+                const res = await fetch('api/validate/isexisted?email=' + email);
                 const existed = (await res.json()).value;
                 
                 if (!email_input.validity.valid) {
@@ -117,6 +120,86 @@ export default function Register() {
         validatePassword();
     }, [password]);
 
+    useEffect(() => {
+        const validateName = async () => {
+            const name_input = document.getElementById("name") as HTMLInputElement;
+            const name = name_input.value;
+            
+            if (name) {
+                if (!name_input.validity.valid) {
+                    name_input.style.borderColor = 'rgb(247, 60, 60)';    
+                }
+                else {
+                    name_input.style.borderColor = 'rgb(14, 204, 14)';
+                }
+            }
+            else {
+                name_input.style.borderColor = 'black';
+            }
+        }
+        validateName();
+    }, [name]);
+
+    useEffect(() => {
+        const validateName = async () => {
+            const name_input = document.getElementById("name") as HTMLInputElement;
+            const name = name_input.value;
+            
+            if (name) {
+                if (!name_input.validity.valid) {
+                    name_input.style.borderColor = 'rgb(247, 60, 60)';    
+                }
+                else {
+                    name_input.style.borderColor = 'rgb(14, 204, 14)';
+                }
+            }
+            else {
+                name_input.style.borderColor = 'black';
+            }
+        }
+        validateName();
+    }, [name]);
+
+    useEffect(() => {
+        const validateAddress = async () => {
+            const address_input = document.getElementById("address") as HTMLInputElement;
+            const address = address_input.value;
+            
+            if (address) {
+                if (!address_input.validity.valid) {
+                    address_input.style.borderColor = 'rgb(247, 60, 60)';    
+                }
+                else {
+                    address_input.style.borderColor = 'rgb(14, 204, 14)';
+                }
+            }
+            else {
+                address_input.style.borderColor = 'black';
+            }
+        }
+        validateAddress();
+    }, [address]);
+
+    useEffect(() => {
+        const validateTel = async () => {
+            const tel_input = document.getElementById("tel") as HTMLInputElement;
+            const tel = tel_input.value;
+            
+            if (tel) {
+                if (!tel_input.validity.valid) {
+                    tel_input.style.borderColor = 'rgb(247, 60, 60)';    
+                }
+                else {
+                    tel_input.style.borderColor = 'rgb(14, 204, 14)';
+                }
+            }
+            else {
+                tel_input.style.borderColor = 'black';
+            }
+        }
+        validateTel();
+    }, [tel]);
+
 
     return (
         <div className="register-form">
@@ -136,7 +219,7 @@ export default function Register() {
                 </div>
                 {passwordError.value && <p className='error-message' style={{ color: "red" }}>{passwordError.message}</p>}
                 <div className="form-input">
-                    <input type="text" id="name" name="name" placeholder=" " required />
+                    <input type="text" id="name" name="name" placeholder=" " pattern='[A-Za-zก-ฮ]{1,}\s[A-Za-zก-ฮ]{1,}' required onBlur={(e) => setName(e.target.value)} />
                     <label htmlFor="name">Name*</label>
                 </div>
                 <div className="form-input">
@@ -145,11 +228,11 @@ export default function Register() {
                 </div>
                 {emailError.value && <p className='error-message' style={{ color: "red" }}>{emailError.message}</p>}
                 <div className="form-input">
-                    <input type="text" placeholder=" " id="address" name="address" required />
+                    <input type="text" placeholder=" " id="address" name="address" pattern="[A-Za-zก-๙0-9'\.\-\s\,]*" required onBlur={(e) => setAddress(e.target.value)} />
                     <label htmlFor="address">Address*</label>
                 </div>
                 <div className="form-input">
-                    <input type="text" placeholder=" " id="tel" name="tel" required />
+                    <input type="text" placeholder=" " pattern='0[^0][0-9]{8,13}' id="tel" name="tel" required onBlur={(e) => setTel(e.target.value)} />
                     <label htmlFor="tel">Tel.*</label>
                 </div>
                 <button type="submit">Submit</button> <br />
