@@ -6,6 +6,9 @@ import connectToDatabase from "@/utils/db";
 import { updateAccount } from '@/actions/updateAccount';
 import type { IUser } from "@/types/db";
 import { UserSession } from '@/types/session';
+import ProfilePicture from '@/components/ProfilePicture';
+import Link from 'next/link';
+import { uploadFile } from '@/actions/upload';
 
 
 export default async function ProfilePage() {
@@ -13,20 +16,32 @@ export default async function ProfilePage() {
   const connection = await connectToDatabase();
 
   const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username, password, name, email, tel, address, 'cus' AS role \
-                                                          FROM customer WHERE cus_id=?", [user.id]);
+                                                          FROM customer WHERE cus_id=?  \
+                                                          UNION SELECT emp_id as id, username, password, name, email, tel, 'None' as address, 'emp' AS role \
+                                                          FROM employee WHERE emp_id=?", [user?.id, user?.id]);
   
-  connection.release();
-
   //console.log(results);
   const result = results[0];
 
-  const loggedInWithGoogle = user.provider === 'google';
+  const loggedInWithGoogle = user?.provider === 'google';
+  const isEmployee = user?.role === 'emp';
 
   return (
     <ContentContainer>
       <div className='profile-content'>
-        <form action={updateAccount}>
           <h1>My Profile</h1>
+          <div>
+            <ProfilePicture src={user?.image} width={80} height={80} />
+            <form action={uploadFile}>
+              <input type='hidden' name='filename' value={user?.id} />
+              <input type='hidden' name='filepath' value={'/users'} />
+              <input type='file' name='image' />
+              <button type='submit'>Submit</button>
+            </form>
+            
+          </div>
+          
+        <form action={updateAccount}>
 
           <input type='hidden' name='id' defaultValue={result?.id} />
 
@@ -52,7 +67,7 @@ export default async function ProfilePage() {
 
           <div className='user-info'>
             <p>Address: </p>
-            <textarea name='address' defaultValue={result?.address} />
+            <textarea name='address' defaultValue={result?.address} readOnly={isEmployee} className={isEmployee ? 'read-only' : ''} />
           </div>
 
           <button type='submit'>Submit</button>
