@@ -22,7 +22,7 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
 
     useEffect(() => {
         async function fetchProducts() {
-          if (!cartItemsSession?.length || status !== 'authenticated' || cartItems.length)
+          if (!cartItemsSession?.length || status !== 'authenticated')
             return;
     
           const cartItemIds = cartItemsSession.map(item => item.id.toString()).join(",");
@@ -40,7 +40,7 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
         }
         fetchProducts();
     
-      }, [cartItems.length, cartItemsSession, setCartItems, status]);
+      }, [status]);
 
     useEffect(() => {
         const totalPrice = cartItems.reduce((sum, item) =>
