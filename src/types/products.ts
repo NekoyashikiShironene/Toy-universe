@@ -9,6 +9,7 @@ export type Product = {
 }
 
 export type TCartItem = Product & {
-    checked: boolean,
-    quantity: number
+    checked?: boolean,
+    quantity: number,
+    availability?: boolean
 }
