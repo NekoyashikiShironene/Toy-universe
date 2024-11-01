@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import "./globals.css";
 
 import { Jomolhari, Kanit } from 'next/font/google'
-import SessionWrapper from "@/components/SessionWrapper";
+import SessionWrapper from "@/contexts/SessionWrapper";
 import CustomerProvider from "@/contexts/CustomerContext";
 
 const Jomol = Jomolhari({
