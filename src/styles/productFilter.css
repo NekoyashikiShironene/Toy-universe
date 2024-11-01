@@ -1,0 +1,41 @@
+/* .product-filter{
+   margin: 10px 0 10px 25%;
+   border: 1px solid;
+}
+
+.filter-checkbox{
+   margin-right: 2px;
+}
+
+.product-filter-categorie,.product-filter-brands{
+   display: flex;
+   gap:2px
+}
+
+.filter-price{
+   width: 75%;
+} */
+
+.product-filter{
+   margin: 5%;
+}
+
+.product-filter-categorie,.product-filter-brands{
+   display: flex;
+   gap:10px;
+   flex-wrap: wrap;
+}
+
+.each-filter-content{
+   display: flex;
+   gap:2px;
+}
+
+@media screen and (min-width: 768px) {
+
+   .product-filter{
+
+      margin: 10px 0 10px 20%;
+      
+   }
+}
