@@ -30,6 +30,7 @@ export default function CartPage() {
 
   const handleCheckAll = (checked: boolean) => {
     setCartItems(cartItems.map(item => ({ ...item, checked })));
+    
   }
 
   const handleCheck = (cartItem: TCartItem, checked: boolean) => {
@@ -93,7 +94,7 @@ export default function CartPage() {
             id='select-all' 
             type="checkbox" 
             onChange={e => handleCheckAll(e.target.checked)} 
-            checked={cartItems.every(item => item.checked)} 
+            checked={cartItems.every(item => item.checked) && Boolean(cartItems.length)} 
           />
           <span>Select All</span>
           {
