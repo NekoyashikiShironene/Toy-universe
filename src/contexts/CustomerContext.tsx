@@ -8,15 +8,17 @@ type TCustomerContext = {
     cartItems: TCartItem[],
     setCartItems: React.Dispatch<React.SetStateAction<TCartItem[]>>,
     totalPrice: number,
-    setTotalPrice: React.Dispatch<React.SetStateAction<number>>
+    setTotalPrice: React.Dispatch<React.SetStateAction<number>>,
+    newUser: boolean
 }
 
 const CustomerContext = createContext<TCustomerContext | undefined>(undefined);
 
 export default function CustomerProvider({ children }: { children: React.ReactNode }) {
-    const { data: session, status, update } = useSession();
+    const { data: session, status } = useSession();
     const cartItemsSession = (session?.user as UserSession)?.cart;
-    
+
+    const [newUser, setNewuser] = useState<boolean>(false);
     const [cartItems, setCartItems] = useState<TCartItem[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
@@ -38,8 +40,17 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
             }
           }));
         }
+
+        async function fetchNewUser() {
+            if (status !== 'authenticated')
+                return;
+            const res = await fetch("api/validate/new-user");
+            const data = (await res.json()).data;
+            if (data)
+                setNewuser(true);
+        }
         fetchProducts();
-    
+        fetchNewUser();
       }, [status]);
 
     useEffect(() => {
@@ -57,7 +68,8 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
                 cartItems,
                 setCartItems,
                 totalPrice,
-                setTotalPrice
+                setTotalPrice,
+                newUser
             }}
         >
             {children}
