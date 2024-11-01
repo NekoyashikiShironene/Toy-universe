@@ -1,38 +1,29 @@
 "use client";
 
 import { Product } from '@/types/products';
-import { UserSession } from '@/types/session';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+
+import { useCustomer } from '@/contexts/CustomerContext';
 
 export default function ProductOrderControls({ product }: { product: Product }) {
-    const { data: session, update } = useSession();
+    const { cartItems, setCartItems } = useCustomer();
     const router = useRouter();
     const [quantity, setQuantity] = useState<number>(1);
     
     const addProductToCart = () => {
-        const newProduct = {
-          id: product.prod_id,
-          quantity: quantity
-        };
-        const user = session?.user as UserSession;
-        const prevCart = user.cart;
-    
-        const isItemInCart = prevCart.find((cartItem) => cartItem.id === product.prod_id)
+        const isItemInCart = cartItems.find((cartItem) => cartItem.prod_id === product.prod_id)
         if (isItemInCart) {
-          update({
-            cart: prevCart.map((cartItem) =>
-              cartItem.id === product.prod_id
+          setCartItems(cartItems.map((cartItem) =>
+              cartItem.prod_id === product.prod_id
                 ? { ...cartItem, quantity: cartItem.quantity + quantity }
                 : cartItem
             )
-          });
+          );
         } else {
-          update({
-            cart: [...prevCart, newProduct]
-          });
+          setCartItems([...cartItems, {...product, quantity}]);
         }
     
         router.push('/cart');
