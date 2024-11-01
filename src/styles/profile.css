@@ -1,15 +1,19 @@
 .profile-content {
     background-color: aliceblue;
+    text-align: center;
 }
 
-.user-info {
+.user-info{
     display: flex;
     margin: 20px auto;
     border-radius: 5px;
+    justify-content: center;
+    /* border:1px solid; */
 }
 
 .profile-content input {
-    border-radius: 5px;
+    border-radius: 10px;
+    border: 1px solid rgb(138, 138, 138);
 }
 
 .read-only {
