@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import connectToDatabase from "@/utils/db";
 import NextCrypto from 'next-crypto';
 
-export async function register(prevState: any, formData: FormData) {
+export async function register(prevState: unknown, formData: FormData) {
     const username = formData.get('username') as string;
     const password = formData.get('password') as string;
     const name = formData.get('name') as string;
