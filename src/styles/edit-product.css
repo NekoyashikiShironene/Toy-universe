@@ -1,0 +1,124 @@
+.add-product-form,.product-detail{
+    background-color: rgb(253, 253, 253);
+    border-radius: 25px;
+    width: 80%;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.product-input ,.product-detail-input{
+    width: 80%;
+    display: flex;
+    margin: 20px auto;
+    justify-content: space-between;
+    /* border: 1px solid red; */
+
+}
+
+/* .product-detail-input{
+    width: 325px;
+    display: flex;
+    justify-content: space-between;
+} */
+
+.product-input input{
+    width: 55%;
+    border-radius: 10px;
+    border:1px solid rgb(138, 138, 138);
+}
+
+.product-search input{
+    border-radius: 10px;
+    border:1px solid rgb(138, 138, 138);
+    margin-left: 10px;
+}
+
+.product-input input[type = 'file']{
+    border: 0px;
+    border-radius: 0px;
+}
+
+.product-search{
+    margin:20px 0;
+    text-align: center;
+}
+
+.product-input textarea{
+    border-radius: 10px;
+    width: 55%;
+}
+
+.editform-img{
+    text-align: center;
+}
+
+
+.submit-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: rgb(171, 228, 233);
+    border: 0px;
+}
+
+.submit-button:hover{
+    background-color: rgb(172, 208, 211);
+}
+
+.preview-image {
+    display: block;
+    margin: 20px auto;
+}
+
+.error-message {
+    text-align: center;
+    margin: 100px auto;
+}
+
+.delete-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: rgb(255, 90, 90);
+    border: 0px;
+}
+
+.delete-button:hover {
+    background-color: rgb(238, 18, 18);
+}
+
+.button-container {
+    display: flex;
+    margin: 0 auto;
+    gap: 50px;
+    justify-content: center;
+}
+
+@media screen and (min-width: 768px) {
+    
+    .add-product-form,.product-detail{
+        font-size: 16px;
+        width: 80%;
+    }
+
+    .product-input {
+        width: 500px;
+        display: flex;
+        margin: 20px auto;
+        justify-content: space-between;
+        /* border: 1px solid red; */
+    
+    }
+
+    .product-input input{
+        width: 300px;
+    
+    }
+
+
+    .product-input textarea{ 
+        width: 300px;
+    }
+
+    
+}
