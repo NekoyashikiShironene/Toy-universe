@@ -5,6 +5,7 @@ import "./globals.css";
 
 import { Jomolhari, Kanit } from 'next/font/google'
 import SessionWrapper from "@/components/SessionWrapper";
+import CustomerProvider from "@/contexts/CustomerContext";
 
 const Jomol = Jomolhari({
   weight: ["400"],
@@ -35,13 +36,15 @@ export default function RootLayout({
 
     <html lang="en" className={`${Jomol.variable} ${KanitFont.variable}`}>
       <SessionWrapper>
-        <body>
-          <Navbar />
-          <main>
-            {children}
-          </main>
-          <Footer />
-        </body>
+          <body>
+            <Navbar />
+            <main>
+              <CustomerProvider>
+                {children}
+              </CustomerProvider>
+            </main>
+            <Footer />
+          </body>
       </SessionWrapper>
     </html>
   );
