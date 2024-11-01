@@ -7,19 +7,23 @@ import { updateAccount } from '@/actions/updateAccount';
 import type { IUser } from "@/types/db";
 import { UserSession } from '@/types/session';
 import ProfilePicture from '@/components/ProfilePicture';
-import Link from 'next/link';
-import { uploadFile } from '@/actions/upload';
+import { uploadProfilePicture } from '@/actions/upload';
+import { redirect } from 'next/navigation';
 
 
 export default async function ProfilePage() {
   const user = (await useSession())?.user as UserSession;
+
+  if (!user)
+    redirect("/");
+
   const connection = await connectToDatabase();
 
   const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username, password, name, email, tel, address, 'cus' AS role \
                                                           FROM customer WHERE cus_id=?  \
                                                           UNION SELECT emp_id as id, username, password, name, email, tel, 'None' as address, 'emp' AS role \
                                                           FROM employee WHERE emp_id=?", [user?.id, user?.id]);
-  
+
   //console.log(results);
   const result = results[0];
 
@@ -29,25 +33,25 @@ export default async function ProfilePage() {
   return (
     <ContentContainer>
       <div className='profile-content'>
-          <h1>My Profile</h1>
-          <div>
-            <ProfilePicture src={user?.image} width={80} height={80} />
-            <form action={uploadFile}>
-              <input type='hidden' name='filename' value={user?.id} />
-              <input type='hidden' name='filepath' value={'/users'} />
-              <input type='file' name='image' />
-              <button type='submit'>Submit</button>
-            </form>
-            
-          </div>
-          
+        <h1>My Profile</h1>
+        <div>
+          <ProfilePicture src={user?.image} width={80} height={80} />
+          <form action={uploadProfilePicture}>
+            <input type='hidden' name='filename' value={user?.id} />
+            <input type='hidden' name='filepath' value={'/users'} />
+            <input type='file' name='image' />
+            <button type='submit'>Submit</button>
+          </form>
+
+        </div>
+
         <form action={updateAccount}>
 
           <input type='hidden' name='id' defaultValue={result?.id} />
 
           <div className='user-info'>
             <p>Username: </p>
-            <input type='text' className='read-only' name='username' defaultValue={result?.username} readOnly/>
+            <input type='text' className='read-only' name='username' defaultValue={result?.username} readOnly />
           </div>
 
           <div className='user-info'>
