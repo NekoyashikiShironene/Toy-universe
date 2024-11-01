@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import "../../styles/cart.css";
 import { CartItem } from '@/components/CartItems';
@@ -11,55 +11,28 @@ import { UserSession } from '@/types/session';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+import CustomerProvider, { useCustomer } from '@/contexts/CustomerContext';
+
 
 export default function CartPage() {
-  const { data: session, status, update } = useSession();
-  const cartItemsSession = (session?.user as UserSession)?.cart;
+  const { update } = useSession();
 
-  const [cartItems, setCartItems] = useState<TCartItem[]>([]);
-  const [totalprice, setTotalPrice] = useState<number>(0);
+  const { cartItems, setCartItems, totalPrice } = useCustomer();
+
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchProducts() {
-      if (!cartItemsSession?.length || status !== 'authenticated' || cartItems.length)
-        return;
-
-      const cartItemIds = cartItemsSession.map(item => item.id.toString()).join(",");
-      const res = await fetch("api/product?prod_ids=" + cartItemIds);
-      const datas = (await res.json()).data ?? [];
-
-      setCartItems(datas.map((data: Product) => {
-        const quantity = cartItemsSession.find(item => item.id === data.prod_id)?.quantity
-
-        return {
-          ...data,
-          checked: false,
-          quantity
-        }
-      }));
-    }
-    fetchProducts();
-
-  }, [cartItems.length, cartItemsSession, status]);
 
   useEffect(() => {
-    const totalPrice = cartItems.reduce((sum, item) =>
-      sum + (item.checked ? item.price * item.quantity : 0)
-      , 0);
-    setTotalPrice(totalPrice);
-  }, [cartItems]);
+    update({
+      cart: cartItems.map(item => ({ id: item.prod_id, quantity: item.quantity }))
+    });
+  }, []);
 
   const handleCheckAll = (checked: boolean) => {
     setCartItems(cartItems.map(item => ({ ...item, checked })));
   }
 
   const handleCheck = (cartItem: TCartItem, checked: boolean) => {
-    if (!checked) {
-      const selectAllBox = document.getElementById("select-all") as HTMLInputElement;
-      selectAllBox.checked = false;
-    }
-
     setCartItems(cartItems.map(item =>
     (
       cartItem.prod_id === item.prod_id
@@ -70,8 +43,6 @@ export default function CartPage() {
   }
 
   const handleRemove = (cartItem: TCartItem) => {
-    const newCartItems = cartItemsSession.filter(item => item.id !== cartItem.prod_id);
-    update({ cart: newCartItems });
     setCartItems(cartItems.filter(item => item.prod_id !== cartItem.prod_id));
   }
 
@@ -81,30 +52,27 @@ export default function CartPage() {
 
     if (!checkedCartItems.length)
       return;
-    
-    const cartItemIds = checkedCartItems.map(item => item.prod_id.toString()).join(",");
-    const cartItemQuantities = checkedCartItems.map(item => item.quantity.toString()).join(",");
 
-    url.searchParams.append("item_ids", encodeURIComponent(cartItemIds));
-    url.searchParams.append("item_quantities", encodeURIComponent(cartItemQuantities));
+    checkedCartItems.forEach(
+      item =>
+        url.searchParams.append("item_ids", item.prod_id.toString())
+    );
+
+    checkedCartItems.forEach(
+      item =>
+        url.searchParams.append("item_quantities", item.quantity.toString())
+    );
+
+
 
     router.push(url.toString());
   }
 
   const handleUpdateQuantity = (cartItem: TCartItem, quantity: number) => {
-    if (quantity < 1){
+    if (quantity < 1) {
       handleRemove(cartItem);
       return;
     }
-
-      
-    update({
-      cart: cartItemsSession.map(item =>
-        cartItem.prod_id === item.id
-          ? { ...item, quantity }
-          : item
-      )
-    });
 
     setCartItems(cartItems.map(item =>
       cartItem.prod_id === item.prod_id
@@ -120,7 +88,13 @@ export default function CartPage() {
       <div className="cart-bg">
         <h1>Shopping Cart</h1>
         <div className="cart-container">
-          <input className='select-all-box' id='select-all' type="checkbox" onChange={e => handleCheckAll(e.target.checked)} />
+          <input 
+            className='select-all-box' 
+            id='select-all' 
+            type="checkbox" 
+            onChange={e => handleCheckAll(e.target.checked)} 
+            checked={cartItems.every(item => item.checked)} 
+          />
           <span>Select All</span>
           {
             cartItems.map((item: TCartItem, index: number) => (
@@ -129,9 +103,9 @@ export default function CartPage() {
 
           }
         </div>
-        
+
         <div className="cart-item-summary">
-          <p className="text-total-price">{`${cartItems.filter(item => item.checked).length} items (${totalprice} ฿)`}</p>
+          <p className="text-total-price">{`${cartItems.filter(item => item.checked).length} items (${totalPrice} ฿)`}</p>
           <p className="text-summary">Shipping, taxes, and discounts will be calculated at checkout</p>
           <div className="btn-container">
             <Link className="continue-shopping-btn" href="/products">Continue Shopping</Link>
@@ -141,6 +115,7 @@ export default function CartPage() {
         </div>
 
       </div >
+      <button onClick={() => console.log()}>dummy</button>
     </ContentContainer >
 
   )
