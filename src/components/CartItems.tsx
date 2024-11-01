@@ -33,7 +33,7 @@ export function CartItem({ item, handleCheck, handleRemove, handleUpdateQuantity
           <span className="item-price">{item.price + "฿"}</span>
           <input type='number' value={item.quantity} max={item.remaining} onChange={(e) => handleUpdateQuantity(item, parseInt(e.target.value))} className="item-quantity" />
         </div>
-        <span className='delete-item' onClick={() => handleRemove(item)}>ลบ</span>
+        <span className='delete-item' onClick={() => handleRemove(item)}>Remove</span>
       </div>
     </div>
   )
