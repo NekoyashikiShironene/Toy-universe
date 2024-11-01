@@ -25,3 +25,17 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ data: results });
 }
+
+export async function DELETE(req: NextRequest) {
+    const prod_id = req.nextUrl.searchParams.get('prod_id');
+
+    if (!prod_id){
+        return NextResponse.json({ error: 'No product ID provided' }, { status: 400 });
+    }
+
+    const connection = await connectToDatabase();
+
+    const [results] = await connection.query("DELETE FROM product WHERE prod_id = ?", [ prod_id ]);
+
+    return NextResponse.json({ data: results });
+}
