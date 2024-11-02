@@ -6,6 +6,7 @@ export type TUserData = {
     selectedItems: TCartItem[]
 }
 
+
 export type TCouponCondition = {
     newUser?: boolean,
     identicalCategories?: number,

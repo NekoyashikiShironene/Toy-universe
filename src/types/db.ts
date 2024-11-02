@@ -22,3 +22,10 @@ export interface IUser extends RowDataPacket {
     role?: string
 }
 
+export type OrderItemQuery = RowDataPacket & {
+    item_id: number,
+    ord_id: number,
+    cus_id: number,
+    prod_id: number,
+    quantity: number
+}
