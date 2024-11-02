@@ -10,7 +10,7 @@ export async function uploadProfilePicture(formData: FormData) {
     if (!(filename && image))
         return { message: "Invalid formData" }
     
-    const result = await uploadFile(image, filename, "/user");
+    const result = await uploadFile(image, filename, "/users");
     return result;
 }
 
