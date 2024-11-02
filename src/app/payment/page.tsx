@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { ContentContainer } from "@/components/Containers";
 import { TCartItem } from "@/types/products";
 import { useRouter } from "next/navigation";
-
 import { useCustomer } from "@/contexts/CustomerContext";
 import { type Address } from "@/types/address";
 import { formatAddress } from "@/utils/address";
@@ -18,8 +17,9 @@ export default function PaymentPage() {
 
    const [existedAddress, setExistedAddress] = useState<Address | undefined>();
    const [address, setAddress] = useState<Address | undefined>();
-
    const [statusMessage, setStatusMessage] = useState<string>("");
+   const [showAddressForm, setshowAddressForm] = useState<boolean>(false);
+   const [promotion, setPromotion] = useState<{promo_id?: number, discount: number}>({promo_id: undefined, discount: 0});
 
    if (!cartItems.length)
       router.push("/cart")
@@ -28,7 +28,6 @@ export default function PaymentPage() {
       async function fetchAddress() {
          const res = await fetch("api/user");
          const data = (await res.json()).data.address_json as Address;
-         console.log(data)
          setExistedAddress(data);
       }
       fetchAddress()
@@ -37,13 +36,18 @@ export default function PaymentPage() {
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       setAddress((prevAddress) => ({
-          ...prevAddress,
-          [name]: value || null
+         ...prevAddress,
+         [name]: value || null
       } as Address));
-  };
-  
+   };
+
 
    const handleSubmitCoupon = async (code: string) => {
+      if (!code) {
+         setStatusMessage("");
+         setPromotion({...promotion, discount: 0});
+         return;
+      }
       const formData = new FormData();
       formData.append("code", code);
       formData.append("userData", JSON.stringify({
@@ -59,25 +63,38 @@ export default function PaymentPage() {
       switch (res.status) {
          case 404:
             setStatusMessage("Coupon Code Not Found");
+            setPromotion({...promotion, discount: 0});
             return;
          case 400:
             setStatusMessage("User does not meet the required conditions for this coupon");
+            setPromotion({...promotion, discount: 0});
             return;
       }
 
       const data = (await res.json()).promotion;
-      setStatusMessage(`Ok Jaaa Here you go!! Discount ${Math.round(data.discount * 100)}%`);
-
+      setPromotion({promo_id: data.promo_id, discount: data.discount});
+      setStatusMessage(`Alright! Here’s your ${Math.round(data.discount * 100)}% discount 🎉 Enjoy shopping!`);
    }
 
    const handlePlaceOrder = async () => {
       const bodyData = {
-         
+         promotion,
+         address: showAddressForm ? address : existedAddress, 
+         products: selectedCartItems
       }
+
+      const res = await fetch("api/checkout", {
+         method: "POST",
+         body: JSON.stringify(bodyData)
+      });
+
+      if (!res.ok)
+         return;
+
+      const session = (await res.json())?.session;
+      router.push(session.url);
    }
 
-
-   const [showAddressForm, setshowAddressForm] = useState<boolean>(false);
 
    return (
       <ContentContainer>
@@ -187,14 +204,23 @@ export default function PaymentPage() {
                ))
             }
 
-            <form onSubmit={e => { e.preventDefault(); handleSubmitCoupon(e.target[0].value) }}>
+            <form onSubmit={e => { e.preventDefault(); handleSubmitCoupon((e.target as HTMLFormElement).coupon.value) }}>
                <h2>Coupon Discount</h2>
                <input type='text' id='coupon' name='coupon' />
                <button type='submit'>Apply</button>
                <p className="status">{statusMessage}</p>
             </form>
 
-            <div className="pay totalPrice">Total: {totalPrice} บาท</div>
+            <div className="pay totalPrice">
+               Total: {promotion.discount ? (
+                  <>
+                     <s className="originalPrice">{totalPrice}</s> {totalPrice - (totalPrice * promotion.discount)}
+                  </>
+               ) : (
+                  totalPrice
+               )} ฿
+            </div>
+
          </div>
 
          <button onClick={() => handlePlaceOrder()}>ชำระเงิน</button>
