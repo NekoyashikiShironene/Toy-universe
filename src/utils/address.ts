@@ -1,6 +1,6 @@
 import { type Address } from "@/types/address";
 
-export function formatAddress(address: Address): string {
+export function formatAddress(address?: Address): string {
     if (!address)
         return "";
     return [
