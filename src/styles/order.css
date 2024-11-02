@@ -1,0 +1,88 @@
+.order-list {
+    margin: 20px 20px;
+}
+
+.order-container {
+    margin: 20px auto;
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: rgb(255, 255, 255);
+}
+
+.order-row {
+    margin: 10px 10px;
+    display: block;
+    border-radius: 5px;
+}
+
+span {
+    display: block;
+    margin: 10px 0px;
+}
+
+.order-container button,
+.order-container select {
+    display: block;
+    margin: 10px auto;
+}
+
+.confirm-button {
+    padding: 5px 10px;
+    background-color: aquamarine;
+    border-radius: 5px;
+}
+
+.confirm-button:hover {
+    background-color: rgb(4, 185, 125);
+}
+
+.show-button {
+    padding: 5px 10px;
+    background-color: rgb(252, 208, 63);
+    border-radius: 5px;
+}
+
+.show-button:hover {
+    background-color: rgb(241, 185, 1);
+}
+
+.order-item-header {
+    display: flex;
+    gap: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 10px 20px;
+    justify-content: space-between;
+    background-color: blanchedalmond;
+}
+
+.order-item-list {
+    display: flex;
+    border-radius: 5px;
+    margin: 10px 20px;
+    justify-content: space-between;
+}
+
+.order-item-container span {
+    margin: 0px 10px;
+}
+
+.order-item-container {
+    text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+    .order-container {
+        width: 60%;
+        margin: 20px auto;
+        border: 1px solid black;
+        border-radius: 3px;
+        text-align: center;
+    }
+    
+    .order-row {
+        margin: 20px 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+}
