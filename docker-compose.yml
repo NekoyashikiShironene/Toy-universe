@@ -55,6 +55,15 @@ services:
     depends_on:
       - db
 
+  stripe:
+    image: stripe/stripe-cli
+    container_name: stripe_cli
+    command: listen --forward-to http://host.docker.internal:3000/api/webhook
+    environment:
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+  #  networks:
+  #    - mynetwork
+
 networks:
   mynetwork:
 
