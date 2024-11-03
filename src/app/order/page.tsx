@@ -5,7 +5,6 @@ import '@/styles/order.css';
 import type { Order } from '@/types/order';
 import { orderStatus } from '@/utils/statusId';
 import { UserSession } from '@/types/session';
-import { redirect } from "next/navigation";
 import useSession from '@/utils/auth';
 import { formatAddress } from '@/utils/address';
 import OrderItem from '@/components/OrderItem';
@@ -41,7 +40,7 @@ const getOrder = unstable_cache(
 
 export default async function Order({ searchParams }: Props) {
     const user = (await useSession())?.user as UserSession;
-    const statusFilter = searchParams.status_id;
+    const statusFilter = searchParams.status_id as string;
     
     const orders = await getOrder(statusFilter, user);
     

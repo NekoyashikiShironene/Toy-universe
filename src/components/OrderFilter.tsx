@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { orderStatus } from '@/utils/statusId';
 
 export default function StatusFilter({ selectedStatus }: { selectedStatus: string}) {
     const router = useRouter();

@@ -2,7 +2,6 @@
 import React from 'react';
 import type { Order } from '@/types/order';
 import { useState } from 'react';
-import { revalidatePath } from 'next/cache';
 import { useRouter } from 'next/navigation';
 
 export default function OrderStatusDropdown({ order }: { order: Order }) {

@@ -2,7 +2,6 @@
 
 import { redirect } from "next/navigation";
 import connectToDatabase from "@/utils/db";
-import NextCrypto from 'next-crypto';
 
 export async function setUsername(formData: FormData) {
 

@@ -4,10 +4,13 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function PreviewImage() {
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<string | null>(null);
 
-    const showPreviewImage = (e) => {
-        const file = e?.target.files[0];
+    const showPreviewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files)
+            return;
+
+        const file = e.target.files[0];
         if (file) {
             setImage(URL.createObjectURL(file));
         }

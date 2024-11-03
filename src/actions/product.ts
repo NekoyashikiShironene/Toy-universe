@@ -1,6 +1,7 @@
 "use server";
 import connectToDatabase from "@/utils/db";
 import { uploadFile } from "@/utils/uploadFile";
+import { ResultSetHeader } from "mysql2";
 import { redirect } from "next/navigation";
 
 export async function addProduct(formData: FormData) {
@@ -15,11 +16,11 @@ export async function addProduct(formData: FormData) {
     const connection = await connectToDatabase();
 
     try {
-        const [ results ] = await connection.query("INSERT INTO product (prod_name, category, brand, description, price, remaining) \
+        const [ results ] = await connection.query<ResultSetHeader>("INSERT INTO product (prod_name, category, brand, description, price, remaining) \
                                                 VALUES(?, ?, ?, ?, ?, ?)", [prod_name, category, brand, description, price, stock]);
 
         if (image) {
-            await uploadFile(image, results.insertId, "/products");
+            await uploadFile(image, results.insertId.toString(), "/products");
         }
         
         

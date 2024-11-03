@@ -6,12 +6,10 @@ import "../../styles/cart.css";
 import { CartItem } from '@/components/CartItems';
 import type { TCartItem } from '@/types/products';
 import { ContentContainer } from '@/components/Containers';
-import { Product } from '@/types/products';
-import { UserSession } from '@/types/session';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import CustomerProvider, { useCustomer } from '@/contexts/CustomerContext';
+import { useCustomer } from '@/contexts/CustomerContext';
 
 
 export default function CartPage() {
@@ -23,6 +21,7 @@ export default function CartPage() {
     update({
       cart: cartItems.map(item => ({ id: item.prod_id, quantity: item.quantity }))
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCheckAll = (checked: boolean) => {

@@ -55,6 +55,7 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
         }
         syncProducts();
         fetchNewUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
 
     useEffect(() => {

@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import "../styles/mobile_menu.css";
-import { LoginButton, LogoutButton } from "./SignButton";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
-
+import type { UserSession } from '@/types/session';
 
 const categories = ['Construction', 'Doll', 'Model', 'Board Game'];
 const brands = ['LEGO', 'Mattel', 'American Girl', 'Disney', 'LOL Surprise', 'Hasbro', 'Bandai', 'Revell', 'Tamiya', 'Metal Earth', 'KOSMOS', 'Days of Wonder', 'Z-Man Games'];
@@ -18,6 +17,7 @@ export default function MobileMenu({ open, setOpen }: Props) {
     const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
     const [isBrandOpen, setIsBrandOpen] = useState<boolean>(false);
     const { data: session, status } = useSession();
+    const user = session?.user as UserSession;
 
     useEffect(() => {
         const closeElements = document.querySelectorAll(".click-to-close");
@@ -80,7 +80,7 @@ export default function MobileMenu({ open, setOpen }: Props) {
                         </li>
                     )}
                     
-                    { session?.user?.role === "emp" &&
+                    { user?.role === "emp" &&
                         <li>
                             <Link href="/order-management" className="">
                                 <h2>Orders</h2>
@@ -88,7 +88,7 @@ export default function MobileMenu({ open, setOpen }: Props) {
                         </li>
                     }
 
-                    { session?.user?.role === "emp" &&
+                    { user?.role === "emp" &&
                         <li>
                             <Link href="/edit-product" className="">
                                 <h2>Edit Product</h2>
@@ -96,7 +96,7 @@ export default function MobileMenu({ open, setOpen }: Props) {
                         </li>
                     }
 
-                    { session?.user?.role === "cus" &&
+                    { user?.role === "cus" &&
                         <li>
                             <Link href="/order">
                                 <h2>My Orders</h2>

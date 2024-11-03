@@ -59,7 +59,7 @@ export default async function EditProduct() {
             </ContentContainer>
         : 
             <div className='error-message'>
-                <h2>You don't have permission for this page.</h2>
+                <h2>You don&apos;t have permission for this page.</h2>
             </div>
         }
         </>

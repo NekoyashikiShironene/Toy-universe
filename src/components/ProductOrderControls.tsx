@@ -1,8 +1,6 @@
 "use client";
 
 import { Product } from '@/types/products';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 

@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
         // store order item using order id 
         order_id = insertOrderResult.insertId;
         const order_items = products.map((product: TCartItem) => [order_id, user.id, product.prod_id, product.quantity]);
-        const [insertOrderItemsResult] = await connection.query<ResultSetHeader>(
+        await connection.query<ResultSetHeader>(
             "INSERT INTO order_item(ord_id, cus_id, prod_id, quantity) VALUES ?",
             [order_items]
         );
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
         line_items,
         mode: "payment",
         success_url: `${process.env.NEXT_PUBLIC_URL}/payment-success?order_id=${order_id}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_URL}/payment-failed`,
+        cancel_url: `${process.env.NEXT_PUBLIC_URL}/payment-failed?order_id=${order_id}`,
     });
 
     // update session_id to order

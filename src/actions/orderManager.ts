@@ -2,7 +2,7 @@
 
 import connectToDatabase from "@/utils/db";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 
 export async function cancelOrder(session_id: string) {

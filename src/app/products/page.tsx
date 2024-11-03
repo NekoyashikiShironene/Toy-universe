@@ -1,5 +1,4 @@
 import React from 'react'
-import { ContentContainer } from '@/components/Containers';
 import { ProductCards } from '@/components/ProductCard';
 import  ProductFilter  from '@/components/ProductFilter';
 
@@ -8,9 +7,9 @@ type Prop = {
 }
 
 export default async function ProductsPage({ searchParams }: Prop) {
-    const query = searchParams.query ?? "" as string;
-    const category = searchParams.category ?? [] as string[];
-    const brand = searchParams.brand ?? [] as string[];
+    const query = searchParams.query as string;
+    const category = searchParams.category as string[] ?? [];
+    const brand = searchParams.brand as string[] ?? [];
     const maxPrice = searchParams.maxPrice as string;
 
     const url = new URL(`${process.env.NEXT_PUBLIC_URL}/api/products`);
@@ -40,15 +39,8 @@ export default async function ProductsPage({ searchParams }: Prop) {
         url.searchParams.set("maxPrice", maxPrice);
     }
 
-
-        const res = await fetch(url.toString(), { cache: "no-store" });
-        
-
-
-        const products = await res.json();
-
-    
-    
+    const res = await fetch(url.toString());
+    const products = await res.json();
 
     return (
         // $_GET["query"]

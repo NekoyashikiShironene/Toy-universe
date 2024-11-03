@@ -7,9 +7,9 @@ import MobileMenu from "./MobileMenu";
 import "../styles/mobile_menu.css";
 import ProfilePicture from "./ProfilePicture";
 import { LoginButton, LogoutButton } from "./SignButton";
-import type { UserSession } from "@/types/session";
 import { FaShoppingCart } from "react-icons/fa";
 import { useSession } from "next-auth/react";
+import { UserSession } from "@/types/session";
 
 const categories = ['Construction', 'Doll', 'Model', 'Board Game'];
 const brands = ['LEGO', 'Mattel', 'American Girl', 'Disney', 'LOL Surprise', 'Hasbro', 'Bandai', 'Revell', 'Tamiya', 'Metal Earth', 'KOSMOS', 'Days of Wonder', 'Z-Man Games'];
@@ -19,6 +19,7 @@ export default function Navbar() {
     const navRef = useRef<HTMLElement>(null);
 
     const { data: session, status } = useSession();
+    const user = session?.user as UserSession;
 
     // add window scroll event
     useEffect(() => {
@@ -58,7 +59,7 @@ export default function Navbar() {
                             Products
                         </Link>
                       
-                        { session?.user?.role === "emp" &&
+                        { user?.role === "emp" &&
                         <>
                             <Link href="/order-management" className="desktop-menu">
                                 Orders
@@ -70,7 +71,7 @@ export default function Navbar() {
                         </>
                         }
 
-                        { session?.user?.role === "cus" &&
+                        { user?.role === "cus" &&
                         <Link href="/order" className="desktop-menu">
                             My Orders
                         </Link>

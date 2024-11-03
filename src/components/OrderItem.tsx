@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import type { Order } from '@/types/order';
 import { useState, useEffect } from 'react';
 import type { OrderItem } from '@/types/order';
 
@@ -24,6 +23,7 @@ export default function OrderItem({orderId}: {orderId: string}) {
         if (showItem) {
             getOrderItem();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [showItem]);
 
     return (
@@ -40,7 +40,7 @@ export default function OrderItem({orderId}: {orderId: string}) {
                                 <span>Quantity</span>
                             </div>
                             {items.map(item => (
-                                <div className='order-item-list'>
+                                <div key={`${orderId}-${item.prod_id}`} className='order-item-list'>
                                     <span>{item.prod_id}</span>
                                     <span>{item.prod_name}</span>
                                     <span>{item.quantity}</span>

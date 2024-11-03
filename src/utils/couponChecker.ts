@@ -1,19 +1,25 @@
 import type { TCouponCondition, TUserData } from "@/types/coupon";
 
-const conditionCheckers: { [key in keyof TCouponCondition]: (userData: TUserData, value: any) => boolean } = {
-    newUser: (userData: TUserData, value: boolean) => userData.newUser,
+const conditionCheckers: { 
+    [key in keyof TCouponCondition]: (userData: TUserData, value: number | boolean) => boolean 
+} = {
+    newUser: (userData: TUserData, value: number | boolean) => {
+        if (typeof value === 'boolean') 
+            return userData.newUser === value;
 
-    identicalCategories: (userData: TUserData, value: number) => {
-        const temp: { [key in keyof any]: number } = {};
+        return false; 
+    },
+
+    identicalCategories: (userData: TUserData, value: number | boolean) => {
+        if (typeof value === 'boolean')
+            return false;
+
+        const categoryCount: { [key: string]: number } = {};
         
         for (const item of userData.selectedItems) {
-            if (!temp[item.category]) {
-                temp[item.category] = 1;
-            } else {
-                temp[item.category]++;
-            }
-    
-            if (temp[item.category] >= value) {
+            categoryCount[item.category] = (categoryCount[item.category] || 0) + 1;
+
+            if (categoryCount[item.category] >= value) {
                 return true;  
             }
         }
@@ -21,41 +27,41 @@ const conditionCheckers: { [key in keyof TCouponCondition]: (userData: TUserData
         return false;
     },
     
-    identicalBrands: (userData: TUserData, value: number) => {
-        const temp: { [key in keyof any]: number } = {};
+    identicalBrands: (userData: TUserData, value: number | boolean) => {
+        if (typeof value === 'boolean')
+            return false;
+
+        const brandCount: { [key: string]: number } = {};
         
         for (const item of userData.selectedItems) {
-            if (!temp[item.brand]) {
-                temp[item.brand] = 1;
-            } else {
-                temp[item.brand]++;
-            }
-    
-            if (temp[item.brand] >= value) {
+            brandCount[item.brand] = (brandCount[item.brand] || 0) + 1;
+
+            if (brandCount[item.brand] >= value) {
                 return true;
             }
         }
     
         return false;
     },
-    
 
-    minPurchase: (userData: TUserData, value: number) => {
-        const purchase = userData.selectedItems.reduce(
-            (prev, current) => prev + current.quantity * current.price
-        , 0)
-        return purchase >= value;
+    minPurchase: (userData: TUserData, value: number | boolean) => {
+        if (typeof value === 'boolean')
+            return false;
+
+        const totalPurchase = userData.selectedItems.reduce(
+            (total, item) => total + item.quantity * item.price, 
+            0
+        );
+        return totalPurchase >= value;
     },
 };
 
-
-
-export function checkCondition(userData: TUserData, couponCondition: TCouponCondition): boolean {
+export function checkCondition(userData: TUserData, couponCondition?: TCouponCondition): boolean {
     if (!couponCondition)
         return true;
 
-    for (let condition in couponCondition) {
-        const value = couponCondition[condition as keyof TCouponCondition];
+    for (const condition in couponCondition) {
+        const value = couponCondition[condition as keyof TCouponCondition] as number | boolean;
         const check = conditionCheckers[condition as keyof TCouponCondition];
 
         if (typeof check === 'function' && !check(userData, value))
@@ -63,5 +69,4 @@ export function checkCondition(userData: TUserData, couponCondition: TCouponCond
     }
 
     return true;
-
 }

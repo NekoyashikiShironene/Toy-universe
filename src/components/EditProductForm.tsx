@@ -13,7 +13,7 @@ export default function EditProductForm() {
     function searchProduct() {
         const xhttp = new XMLHttpRequest();
         const prod_id = (document.getElementById("prod_id") as HTMLInputElement).value;
-        let url = `${process.env.NEXT_PUBLIC_URL}/api/product?prod_ids=${prod_id}`;
+        const url = `${process.env.NEXT_PUBLIC_URL}/api/product?prod_ids=${prod_id}`;
 
         xhttp.onreadystatechange = async function() {
             if (xhttp.readyState === 4 && xhttp.status === 200){

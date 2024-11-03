@@ -3,6 +3,7 @@ import Image from 'next/image';
 import "../../styles/detail.css";
 import ProductOrderControls from '@/components/ProductOrderControls';
 import { ContentContainer } from '@/components/Containers';
+import { notFound } from 'next/navigation';
 
 type Prop = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -10,10 +11,15 @@ type Prop = {
 
 export default async function ProductDetailPage({ searchParams }: Prop) {
   const productId = searchParams.prod_id as string;
-
   const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/product?prod_ids=${productId}`);
+
+  
+
   const data = (await res.json()).data;
   const product = data[0];
+
+  if (!(res.ok && product && productId))
+      notFound();
 
   return (
     <ContentContainer>
@@ -21,7 +27,7 @@ export default async function ProductDetailPage({ searchParams }: Prop) {
         <div className="image-container">
           <Image
             src={`/products/${productId}.jpg`}
-            alt={product.prod_name}
+            alt={product?.prod_name ?? ""}
             width={300}
             height={300}
             className="product-image"
@@ -34,7 +40,7 @@ export default async function ProductDetailPage({ searchParams }: Prop) {
           <p className="stock">Remaining: {product.remaining} pieces</p>
           <ProductOrderControls product={product} />
         </div>
-      </div>
+        </div>
     </ContentContainer>
   );
 }

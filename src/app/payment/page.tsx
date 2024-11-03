@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 
 export default function PaymentPage() {
    const router = useRouter();
-   const { update, status } = useSession();
+   const { update } = useSession();
    const { cartItems, totalPrice, newUser, setCartItems } = useCustomer();
    const selectedCartItems = cartItems.filter(item => item.checked);
 

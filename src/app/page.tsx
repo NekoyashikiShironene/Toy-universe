@@ -8,6 +8,7 @@ import type { Product } from "@/types/products";
 import "../styles/product_card.css";
 
 
+
 export default async function Home() {
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/products?brand=LEGO`);
@@ -20,7 +21,6 @@ export default async function Home() {
       <Search type="mobile" />
       <ImageSlider/>
       
-
       <div className="show-product-home">
         <Link href={`/products?brand=LEGO`}>
           <div className="topic-product">LEGO</div>
@@ -45,7 +45,11 @@ export default async function Home() {
             ))
           }
         </div>
+        
       </div>
+
+        
+
     </>
 
     

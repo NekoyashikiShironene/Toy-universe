@@ -32,7 +32,7 @@ type Props = {
 
 
 const getOrder = unstable_cache(
-    async (statusFilter: string | string[] | undefined, user: UserSession) => { 
+    async (statusFilter: string | string[] | undefined) => { 
         const connection = await connectToDatabase();
         let orders;
         try {
@@ -63,7 +63,7 @@ export default async function OrderManagement({ searchParams }: Props) {
     if (user?.role !== "emp")
         redirect("/");
     
-    const orders = await getOrder(statusFilter, user);
+    const orders = await getOrder(statusFilter);
 
     return (
         <ContentContainer>

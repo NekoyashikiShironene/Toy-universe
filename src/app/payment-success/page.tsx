@@ -6,7 +6,7 @@ import Link from "next/link";
 import useSession from "@/utils/auth";
 import { UserSession } from "@/types/session";
 import connectToDatabase from "@/utils/db";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { RowDataPacket } from "mysql2/promise";
 
 
@@ -28,7 +28,7 @@ export default async function SuccessfullPage({ searchParams }: Prop) {
     );
 
     if (!results[0])
-        redirect("/");
+        notFound();
 
     // get total amount
     const [orderedItems] = await connection.query<RowDataPacket[]>(

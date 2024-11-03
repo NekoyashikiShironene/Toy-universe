@@ -8,7 +8,6 @@ import type { IUser } from "@/types/db";
 import { UserSession } from '@/types/session';
 import ProfilePicture from '@/components/ProfilePicture';
 import { uploadProfilePicture } from '@/actions/upload';
-import { redirect } from 'next/navigation';
 
 
 export default async function ProfilePage() {

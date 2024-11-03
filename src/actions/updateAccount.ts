@@ -2,13 +2,11 @@
 
 import { redirect } from "next/navigation";
 import connectToDatabase from "@/utils/db";
-import NextCrypto from 'next-crypto';
 
 export async function updateAccount(formData: FormData) {
 
     const id = formData.get('id') as string;
     const username = formData.get('username') as string;
-    const password = formData.get('password') as string;
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const tel = formData.get('tel') as string;
