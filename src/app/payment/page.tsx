@@ -4,7 +4,7 @@ import "../../styles/payment.css"
 import { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { ContentContainer } from "@/components/Containers";
-import { TCartItem } from "@/types/products";
+import { Product, TCartItem } from "@/types/products";
 import { useRouter } from "next/navigation";
 import { useCustomer } from "@/contexts/CustomerContext";
 import { type Address } from "@/types/address";
@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 
 export default function PaymentPage() {
    const router = useRouter();
-   const { update } = useSession();
+   const { update, status } = useSession();
    const { cartItems, totalPrice, newUser, setCartItems } = useCustomer();
    const selectedCartItems = cartItems.filter(item => item.checked);
 
@@ -24,16 +24,17 @@ export default function PaymentPage() {
    const [paymentLoading, setPaymentLoading] = useState<boolean>(false);
    const [promotion, setPromotion] = useState<{promo_id?: number, discount: number}>({promo_id: undefined, discount: 0});
 
+
    useEffect(() => {
       if (!cartItems.length && !paymentLoading) 
          router.push("/cart");
 
-   }, [selectedCartItems.length, paymentLoading, router]);
+   }, [selectedCartItems.length, paymentLoading, router, cartItems.length]);
 
    useEffect(() => {
       async function fetchAddress() {
          const res = await fetch("api/user");
-         const data = (await res.json()).data.address_json as Address;
+         const data = (await res.json())?.data?.address_json as Address;
          setExistedAddress(data);
       }
       fetchAddress()
@@ -84,7 +85,25 @@ export default function PaymentPage() {
 
    const handlePlaceOrder = async () => {
       setPaymentLoading(true);
+      const selectedCartItemsIds = selectedCartItems.map(item => item.prod_id.toString()).join(",");
+      const prodRes = await fetch("api/product?prod_ids=" + selectedCartItemsIds);
+      const datas = (await prodRes.json()).data ?? [];
 
+
+      // if some item is out of stock then check cart
+      const availability = selectedCartItems.some(item => {
+         const dataItem = datas.find((data: Product) => data.prod_id === item.prod_id);
+         return dataItem && item.quantity <= dataItem.remaining;
+      });
+
+      if (!availability) {
+         alert("Some item is out of stock. Please check your cart again.");
+         router.push("/cart");
+         return;
+      }
+
+
+      // remove from cart   
       const updatedCartItems = cartItems.filter(item => !item.checked);
       setCartItems(updatedCartItems);
       update({

@@ -17,7 +17,13 @@ export function CartItem({ item, handleCheck, handleRemove, handleUpdateQuantity
  {
   return (
     <div className="cart-item">
-      <input className='item-checkbox' type="checkbox" checked={item.checked} onChange={(e) => handleCheck(item, e.target.checked)} />
+      <input 
+        className='item-checkbox' 
+        type="checkbox" 
+        checked={item.checked}
+        onChange={(e) => handleCheck(item, e.target.checked)} 
+        disabled={!item.availability}
+      />
       <Link href={`/detail?prod_id=${item.prod_id}`}>
         <Image
           src={`/products/${item.prod_id}.jpg`}
@@ -31,9 +37,18 @@ export function CartItem({ item, handleCheck, handleRemove, handleUpdateQuantity
         <h2 className="item-name">{item.prod_name}</h2>
         <div className="item-price-manager">
           <span className="item-price">{item.price + "฿"}</span>
-          <input type='number' value={item.quantity} max={item.remaining} onChange={(e) => handleUpdateQuantity(item, parseInt(e.target.value))} className="item-quantity" />
+          <input 
+            type='number' 
+            value={item.quantity} 
+            max={item.remaining} 
+            onChange={(e) => handleUpdateQuantity(item, parseInt(e.target.value))} 
+            className="item-quantity" 
+            disabled={!item.availability} 
+          />
         </div>
+        {!item.availability && <p style={{color: "red"}}>Sorry, this item is out of stock</p>}
         <span className='delete-item' onClick={() => handleRemove(item)}>Remove</span>
+        
       </div>
     </div>
   )

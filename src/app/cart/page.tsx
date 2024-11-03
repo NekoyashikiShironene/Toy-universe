@@ -16,11 +16,8 @@ import CustomerProvider, { useCustomer } from '@/contexts/CustomerContext';
 
 export default function CartPage() {
   const { update } = useSession();
-
   const { cartItems, setCartItems, totalPrice } = useCustomer();
-
   const router = useRouter();
-
 
   useEffect(() => {
     update({
@@ -29,7 +26,11 @@ export default function CartPage() {
   }, []);
 
   const handleCheckAll = (checked: boolean) => {
-    setCartItems(cartItems.map(item => ({ ...item, checked })));
+    setCartItems(
+      cartItems.map(
+      item => ({ ...item, checked: item.availability ? checked : false })
+    )
+    );
     
   }
 
@@ -76,7 +77,12 @@ export default function CartPage() {
             id='select-all' 
             type="checkbox" 
             onChange={e => handleCheckAll(e.target.checked)} 
-            checked={cartItems.every(item => item.checked) && Boolean(cartItems.length)} 
+            checked={
+              cartItems
+                .filter(item => item.availability)
+                .every(item => item.checked) &&
+              Boolean(cartItems.length)
+            } 
           />
           <span>Select All</span>
           {
