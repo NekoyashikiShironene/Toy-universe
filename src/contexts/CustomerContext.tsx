@@ -9,7 +9,7 @@ type TCustomerContext = {
     setCartItems: React.Dispatch<React.SetStateAction<TCartItem[]>>,
     totalPrice: number,
     setTotalPrice: React.Dispatch<React.SetStateAction<number>>,
-    newUser: boolean
+    newUser: boolean,
 }
 
 const CustomerContext = createContext<TCustomerContext | undefined>(undefined);
@@ -22,25 +22,29 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
     const [cartItems, setCartItems] = useState<TCartItem[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
-    useEffect(() => {
-        async function fetchProducts() {
-          if (!cartItemsSession?.length || status !== 'authenticated')
+    // check selected and availability of products in cart
+    async function syncProducts() {
+        console.log("here")
+        if (!cartItemsSession?.length || status !== 'authenticated')
             return;
-    
-          const cartItemIds = cartItemsSession.map(item => item.id.toString()).join(",");
-          const res = await fetch("api/product?prod_ids=" + cartItemIds);
-          const datas = (await res.json()).data ?? [];
-    
-          setCartItems(datas.map((data: Product) => {
-            const quantity = cartItemsSession.find(item => item.id === data.prod_id)?.quantity
-            return {
-              ...data,
-              checked: false,
-              quantity
-            }
-          }));
-        }
 
+        const cartItemIds = cartItemsSession.map(item => item.id.toString()).join(",");
+        const res = await fetch("api/product?prod_ids=" + cartItemIds);
+        const datas = (await res.json()).data ?? [];
+
+        setCartItems(datas.map((data: Product) => {
+            const quantity = cartItemsSession.find(item => item.id === data.prod_id)?.quantity ?? 0
+            return {
+                ...data,
+                checked: false,
+                availability: quantity <= data.remaining,
+                quantity,
+
+            }
+        }));
+    }
+
+    useEffect(() => {
         async function fetchNewUser() {
             if (status !== 'authenticated')
                 return;
@@ -49,9 +53,9 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
             if (data)
                 setNewuser(true);
         }
-        fetchProducts();
+        syncProducts();
         fetchNewUser();
-      }, [status]);
+    }, [status]);
 
     useEffect(() => {
         const totalPrice = cartItems.reduce((sum, item) =>
@@ -60,7 +64,7 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
         setTotalPrice(totalPrice);
     }, [cartItems, setTotalPrice]);
 
-    
+
 
     return (
         <CustomerContext.Provider
@@ -69,7 +73,7 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
                 setCartItems,
                 totalPrice,
                 setTotalPrice,
-                newUser
+                newUser,
             }}
         >
             {children}
