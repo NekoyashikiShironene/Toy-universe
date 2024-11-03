@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import connectToDatabase from "@/utils/db";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
+import { revalidatePath } from "next/cache";
 
 
 
@@ -31,11 +32,11 @@ export async function POST(req: NextRequest) {
                 "UPDATE `order` SET status_id = 1 WHERE session_id = ?",
                 [paymentIntent.id]
             );
+            revalidatePath("/order");
 
             
         } else if (event.type === 'checkout.session.expired') { 
             console.log('Payment session was expired!');
-
             const paymentIntent = event.data.object;
             const [orderResults] = await connection.query<RowDataPacket[]>(
                 "SELECT * FROM `order` \
@@ -44,7 +45,10 @@ export async function POST(req: NextRequest) {
                 [paymentIntent.id]
             );
             
-            const order_id = orderResults[0].ord_id;
+            const order_id = orderResults[0]?.ord_id;
+
+            if (!order_id)
+                return NextResponse.json({ received: true });
 
             await connection.query<ResultSetHeader>(
                 "DELETE FROM applying WHERE ord_id = ?",
@@ -66,7 +70,7 @@ export async function POST(req: NextRequest) {
                     [product.quantity, product.prod_id]
                 );
             });
-           
+            revalidatePath("/order");
         } else {
             console.log(`Unhandled event type ${event.type}`);
         }
