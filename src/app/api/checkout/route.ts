@@ -5,9 +5,7 @@ import { type TCartItem } from "@/types/products";
 import Stripe from "stripe";
 import connectToDatabase from "@/utils/db";
 import { ResultSetHeader } from "mysql2/promise";
-
-
-
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: NextRequest) {
     const api_key = process.env.STRIPE_API_KEY;
@@ -67,10 +65,14 @@ export async function POST(req: NextRequest) {
             );
 
         await connection.commit();
+        revalidatePath("/detail");
+        revalidatePath("/order");
     } catch (e: unknown) {
         await connection.rollback();
         throw e;
     }
+
+    
 
     const stripe = new Stripe(api_key);
     const session = await stripe.checkout.sessions.create({
