@@ -24,7 +24,6 @@ export default async function ProfilePage() {
                                                           UNION SELECT emp_id as id, username, password, name, email, tel, 'None' as address, 'emp' AS role \
                                                           FROM employee WHERE emp_id=?", [user?.id, user?.id]);
 
-  //console.log(results);
   const result = results[0];
 
   const loggedInWithGoogle = user?.provider === 'google';
@@ -36,16 +35,16 @@ export default async function ProfilePage() {
         <h1>My Profile</h1>
         <div>
           <ProfilePicture src={user?.image} width={80} height={80} />
-          <form action={uploadProfilePicture}>
+          <form action={uploadProfilePicture} className='upload-pic-form'>
             <input type='hidden' name='filename' value={user?.id} />
             <input type='hidden' name='filepath' value={'/users'} />
-            <input type='file' name='image' />
-            <button type='submit'>Submit</button>
+            <input className='profile-img-input' type='file' name='image' />
+            <button type='submit' className='profile-submit'>Submit</button>
           </form>
 
         </div>
 
-        <form action={updateAccount}>
+        <form action={updateAccount} className='profile-form'>
 
           <input type='hidden' name='id' defaultValue={result?.id} />
 
@@ -55,8 +54,10 @@ export default async function ProfilePage() {
           </div>
 
           <div className='user-info'>
-            <p>Name: </p>
-            <input type='text' name='name' defaultValue={result?.name} />
+            
+              <p>Name: </p>
+              <input type='text' name='name' defaultValue={result?.name} />
+            
           </div>
 
           <div className='user-info'>
@@ -74,7 +75,7 @@ export default async function ProfilePage() {
             <textarea name='address' defaultValue={result?.address} readOnly={isEmployee} className={isEmployee ? 'read-only' : ''} />
           </div>
 
-          <button type='submit'>Submit</button>
+          <button type='submit' className='profile-submit'>Submit</button>
         </form>
       </div>
 
