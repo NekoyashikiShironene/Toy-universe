@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import "../../styles/payment.css"
 import { useEffect, useState } from 'react'
@@ -9,20 +9,26 @@ import { useRouter } from "next/navigation";
 import { useCustomer } from "@/contexts/CustomerContext";
 import { type Address } from "@/types/address";
 import { formatAddress } from "@/utils/address";
+import { useSession } from "next-auth/react";
 
 export default function PaymentPage() {
    const router = useRouter();
-   const { cartItems, totalPrice, newUser } = useCustomer();
+   const { update } = useSession();
+   const { cartItems, totalPrice, newUser, setCartItems } = useCustomer();
    const selectedCartItems = cartItems.filter(item => item.checked);
 
    const [existedAddress, setExistedAddress] = useState<Address | undefined>();
    const [address, setAddress] = useState<Address | undefined>();
    const [statusMessage, setStatusMessage] = useState<string>("");
    const [showAddressForm, setshowAddressForm] = useState<boolean>(false);
+   const [paymentLoading, setPaymentLoading] = useState<boolean>(false);
    const [promotion, setPromotion] = useState<{promo_id?: number, discount: number}>({promo_id: undefined, discount: 0});
 
-   if (!cartItems.length)
-      router.push("/cart")
+   useEffect(() => {
+      if (!cartItems.length && !paymentLoading) 
+         router.push("/cart");
+
+   }, [selectedCartItems.length, paymentLoading, router]);
 
    useEffect(() => {
       async function fetchAddress() {
@@ -77,23 +83,35 @@ export default function PaymentPage() {
    }
 
    const handlePlaceOrder = async () => {
+      setPaymentLoading(true);
+
+      const updatedCartItems = cartItems.filter(item => !item.checked);
+      setCartItems(updatedCartItems);
+      update({
+         cart: updatedCartItems.map(item => ({ id: item.prod_id, quantity: item.quantity }))
+      });
+   
       const bodyData = {
          promotion,
          address: showAddressForm ? address : existedAddress, 
          products: selectedCartItems
-      }
-
+      };
+   
       const res = await fetch("api/checkout", {
          method: "POST",
          body: JSON.stringify(bodyData)
       });
-
-      if (!res.ok)
+   
+      setPaymentLoading(false);
+      if (!res.ok) {
+         setStatusMessage("Order failed. Please try again.");
          return;
-
+      }
+   
       const session = (await res.json())?.session;
       router.push(session.url);
-   }
+   };
+   
 
 
    return (
