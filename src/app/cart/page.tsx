@@ -42,31 +42,13 @@ export default function CartPage() {
     )
     ));
   }
-
+  
   const handleRemove = (cartItem: TCartItem) => {
     setCartItems(cartItems.filter(item => item.prod_id !== cartItem.prod_id));
   }
 
   const handleCheckout = () => {
-    const url = new URL(process.env.NEXT_PUBLIC_URL + "/payment");
-    const checkedCartItems = cartItems.filter(item => item.checked);
-
-    if (!checkedCartItems.length)
-      return;
-
-    checkedCartItems.forEach(
-      item =>
-        url.searchParams.append("item_ids", item.prod_id.toString())
-    );
-
-    checkedCartItems.forEach(
-      item =>
-        url.searchParams.append("item_quantities", item.quantity.toString())
-    );
-
-
-
-    router.push(url.toString());
+    router.push("/payment");
   }
 
   const handleUpdateQuantity = (cartItem: TCartItem, quantity: number) => {
@@ -116,7 +98,6 @@ export default function CartPage() {
         </div>
 
       </div >
-      <button onClick={() => console.log()}>dummy</button>
     </ContentContainer >
 
   )
