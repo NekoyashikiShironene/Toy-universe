@@ -1,5 +1,7 @@
-import Stripe from "stripe";
-import { redirect } from "next/navigation";
+"use client";
+
+import { cancelOrder } from "@/actions/orderManager";
+import { useRouter } from "next/navigation";
 
 export default function OrderManager({ orderStatus, session_id, session_url }:
   {
@@ -8,38 +10,30 @@ export default function OrderManager({ orderStatus, session_id, session_url }:
     session_url: string
   }) {
 
-  const handleCancelOrder = async (formData: FormData) => {
-    "use server";
-    const stripe = new Stripe(process.env.STRIPE_API_KEY ?? "");
-    await stripe.checkout.sessions.expire(session_id);
-  }
+    const router = useRouter();
 
-  const handlePay = async (formData: FormData) => {
-    "use server";
-    redirect(session_url);
-  }
+    const handleCancelOrder = async (session_id: string) => {
+      const cannel = confirm("Cancel this order?");
 
-  return (
-    <>
-      {
-        !orderStatus &&
-        <>
-        <form action={handlePay}>
-          <button type="submit">
-            Pay
-          </button>
-        </form>
-        <form action={handleCancelOrder}>
-          <button type="submit">
-            Cancel
-          </button>
-        </form>
-        </>
-      }
+      if (!cannel)
+        return;
 
-    </>
+      await cancelOrder(session_id);
+    }
+    if (orderStatus)
+      return;
 
-  )
+    return (
+      <>
+        <button onClick={() => router.push(session_url)}>
+          Pay
+        </button>
+        <button onClick={() => handleCancelOrder(session_id)}>
+          Cancel
+        </button>
+      </>
+    )
+
 }
 
 
