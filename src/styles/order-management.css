@@ -9,6 +9,11 @@
     background-color: rgb(255, 255, 255);
 }
 
+.order-header {
+    margin: 0px 10px;
+    margin-top: 20px;
+}
+
 .order-row {
     margin: 10px 10px;
     display: block;
@@ -28,18 +33,20 @@ span {
 
 .confirm-button {
     padding: 5px 10px;
-    background-color: aquamarine;
+    background-color: rgb(57, 255, 57);
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .confirm-button:hover {
-    background-color: rgb(4, 185, 125);
+    background-color: rgb(20, 238, 20);
 }
 
 .show-button {
     padding: 5px 10px;
     background-color: rgb(252, 208, 63);
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .show-button:hover {
@@ -71,16 +78,19 @@ span {
     text-align: center;
 }
 
+.status-filter {
+    text-align: center;
+}
+
 @media screen and (min-width: 768px) {
     .order-container {
         width: 60%;
         margin: 20px auto;
         border: 1px solid black;
         border-radius: 3px;
-        text-align: center;
     }
     
-    .order-row {
+    .order-header {
         margin: 20px 10px;
         display: flex;
         justify-content: space-between;

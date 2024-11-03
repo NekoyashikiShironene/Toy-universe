@@ -80,6 +80,21 @@ a>li:hover {
     background-color: rgb(240, 245, 245);
 }
 
+.login-btn, .logout-btn {
+    color: #181823;
+    font-weight: 700;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.login-button {
+    color: rgb(19, 230, 19);
+}
+
+.logout-button {
+    color: rgb(245, 56, 56);
+}
+
 @media screen and (min-width: 768px) {
     .menu2 h2 {
         margin-left: 20px;
