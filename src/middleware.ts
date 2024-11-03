@@ -1,18 +1,18 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import connectToDatabase from './utils/db';
-import { IUser } from './types/db';
 
 export async function middleware(request: NextRequest) {
-  
-  if (request.nextUrl.pathname.startsWith("/_next")) 
+  if ((request.nextUrl.pathname.startsWith("/_next")) || request.nextUrl.pathname.startsWith("/api"))
     return NextResponse.next();
   
   const token = await getToken({
     req: request,
     secret: process.env.SESSION_SECRET
   });
+
+  if (!token)
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/login`);
 
   if (token?.provider === "google" && token?.role === "cus") {
     const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/validate/isempty?attr=username&id=${token.id}`);
@@ -28,5 +28,15 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!set-username).*)"],
+  matcher: [
+    "/cart",
+    "/payment",
+    "/payment-success",
+    "/payment-failed",
+    "/profile",
+    "/order",
+    "/order-management",
+    "/edit-product",
+    "/set-username",
+  ],
 }

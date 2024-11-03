@@ -10,10 +10,8 @@ import { UserSession } from '@/types/session';
 export default async function AccountInfo() {
   const session = await useSession();
   const connection = await connectToDatabase();
-
   const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username FROM customer WHERE cus_id=?", [(session?.user as UserSession)?.id]);
 
-  //console.log(results);
   const result = results[0];
 
   return (

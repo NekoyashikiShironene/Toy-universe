@@ -60,7 +60,7 @@ export default async function OrderManagement({ searchParams }: Props) {
     const user = (await useSession())?.user as UserSession;
     const statusFilter = searchParams.status_id;
 
-    if (!user || user.role !== "emp")
+    if (user?.role !== "emp")
         redirect("/");
     
     const orders = await getOrder(statusFilter, user);

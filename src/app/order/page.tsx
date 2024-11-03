@@ -42,9 +42,6 @@ const getOrder = unstable_cache(
 export default async function Order({ searchParams }: Props) {
     const user = (await useSession())?.user as UserSession;
     const statusFilter = searchParams.status_id;
-
-    if (!user)
-        redirect("/login");
     
     const orders = await getOrder(statusFilter, user);
     

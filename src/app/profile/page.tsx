@@ -14,9 +14,6 @@ import { redirect } from 'next/navigation';
 export default async function ProfilePage() {
   const user = (await useSession())?.user as UserSession;
 
-  if (!user)
-    redirect("/");
-
   const connection = await connectToDatabase();
 
   const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username, password, name, email, tel, address, 'cus' AS role \
