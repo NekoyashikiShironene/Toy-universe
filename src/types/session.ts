@@ -1,4 +1,4 @@
-export type CartItem = {
+export type SessionCartItem = {
     id: number,
     quantity: number
 };
@@ -9,6 +9,6 @@ export type UserSession = {
     image: string,
     id: string,
     role: string,
-    cart: CartItem[],
+    cart: SessionCartItem[],
     provider: string
 }
