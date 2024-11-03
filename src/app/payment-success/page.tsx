@@ -31,16 +31,25 @@ export default async function SuccessfullPage({ searchParams }: Prop) {
         redirect("/");
 
     // get total amount
-    const [totalAmountResult] = await connection.query<RowDataPacket[]>(
-        "SELECT SUM((order_item.quantity * product.price) * (1 - COALESCE(promotion.discount, 0))) AS total_amount \
-        FROM order_item \
-        JOIN product ON order_item.prod_id = product.prod_id \
-        LEFT JOIN applying ON order_item.ord_id = applying.ord_id \
-        LEFT JOIN promotion ON applying.promo_id = promotion.promo_id \
-        WHERE order_item.ord_id = ?",
+    const [orderedItems] = await connection.query<RowDataPacket[]>(
+        `SELECT 
+            order_item.quantity,
+            product.prod_id,
+            product.prod_name AS product_name,
+            product.price,
+            COALESCE(promotion.discount, 0) AS discount,
+            (order_item.quantity * product.price * (1 - COALESCE(promotion.discount, 0))) AS item_total
+         FROM order_item
+         JOIN product ON order_item.prod_id = product.prod_id
+         LEFT JOIN applying ON order_item.ord_id = applying.ord_id
+         LEFT JOIN promotion ON applying.promo_id = promotion.promo_id
+         WHERE order_item.ord_id = ?`,
         [order_id]
     );
-    const { total_amount } = totalAmountResult[0];
+
+    const total_amount = orderedItems.reduce((prev, current) =>
+        prev + current.item_total,
+        0);
 
     return (
         <ContentContainer>
