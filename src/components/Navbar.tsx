@@ -7,7 +7,7 @@ import MobileMenu from "./MobileMenu";
 import "../styles/mobile_menu.css";
 import ProfilePicture from "./ProfilePicture";
 import { LoginButton, LogoutButton } from "./SignButton";
-
+import type { UserSession } from "@/types/session";
 import { FaShoppingCart } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 
@@ -53,9 +53,29 @@ export default function Navbar() {
                         <Link href="/" className="desktop-menu">
                             Home
                         </Link>
+
                         <Link href="/products" className="desktop-menu">
                             Products
                         </Link>
+                      
+                        { session?.user?.role === "emp" &&
+                        <>
+                            <Link href="/order-management" className="desktop-menu">
+                                Orders
+                            </Link>
+
+                            <Link href="/edit-product" className="desktop-menu">
+                                Edit Product
+                            </Link>
+                        </>
+                        }
+
+                        { session?.user?.role === "cus" &&
+                        <Link href="/order" className="desktop-menu">
+                            My Orders
+                        </Link>
+                        }
+
                         <div className="nav-dropdown">
                             <button className="nav-dropdown-btn">Categories</button>
                             <div className="nav-dropdown-content">
@@ -109,13 +129,12 @@ export default function Navbar() {
                                             width={30} height={30}
                                         />
                                     </Link>
+                                    
                                     <LogoutButton />
                                 </>
                             ) : (
                                 <LoginButton />
                             )
-
-
                         }
                     </div>
 
