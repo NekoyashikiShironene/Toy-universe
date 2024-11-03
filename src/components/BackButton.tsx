@@ -11,12 +11,9 @@ export default function BackButton() {
     };
 
     return (
-        <div>
-            
             <button onClick={handleBack} className='back-button'>
                 <IoMdArrowRoundBack size={40} />
             </button>
-        </div>
     )
 }
 
