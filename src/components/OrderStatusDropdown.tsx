@@ -2,9 +2,13 @@
 import React from 'react';
 import type { Order } from '@/types/order';
 import { useState } from 'react';
+import { revalidatePath } from 'next/cache';
+import { useRouter } from 'next/navigation';
 
-export default function OrderStatusDropdown({order}: {order: Order}) {
+export default function OrderStatusDropdown({ order }: { order: Order }) {
     const [ status, setStatus ] = useState(order.status_id);
+
+    const router = useRouter();
 
     const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setStatus(parseInt(event.target.value));
@@ -14,11 +18,12 @@ export default function OrderStatusDropdown({order}: {order: Order}) {
         try {
             const res = await fetch('/api/order/updatestatus', {
                 method: 'POST',
-                body: JSON.stringify({ ord_id: order.ord_id, status_id: status })
+                body: JSON.stringify({ ord_id: order.ord_id, status_id: status }),
             });
             
             if (res.ok) {
                 alert("Status updated successfully");
+                router.refresh();
             } 
             else {
                 alert("Failed to update status");
