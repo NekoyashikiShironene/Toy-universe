@@ -13,9 +13,7 @@ export default async function Home() {
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/products?brand=LEGO`);
   const data = (await res.json()).data;
-  // const product = data[1];
   
-
   return (
     <>
       <Search type="mobile" />
