@@ -55,25 +55,34 @@
 }
 
 
-.submit-button {
+.add-product-form .submit-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: rgb(171, 228, 233);
+    border: 0px;
+    margin: 0 auto;
+    display: block;
+}
+
+.button-container .submit-button {
     padding: 5px 10px;
     border-radius: 5px;
     background-color: rgb(171, 228, 233);
     border: 0px;
 }
 
-.submit-button:hover{
+.button-container .submit-button:hover {
     background-color: rgb(172, 208, 211);
 }
 
-.preview-image {
-    display: block;
-    margin: 20px auto;
+.submit-button:hover{
+    background-color: rgb(172, 
+    208, 211);
 }
 
-.error-message {
-    text-align: center;
-    margin: 100px auto;
+.show-image {
+    display: block;
+    margin: 20px auto;
 }
 
 .delete-button {
@@ -85,6 +94,29 @@
 
 .delete-button:hover {
     background-color: rgb(238, 18, 18);
+}
+
+#add-result-message,
+#update-result-message {
+    text-align: center;
+}
+
+.add-success {
+    color: rgb(59, 202, 41);
+}
+
+.add-error {
+    color: rgb(212, 44, 44);
+}
+
+.update-success {
+    color: rgb(59, 202, 41);
+    display: block;
+}
+
+.update-error {
+    color: rgb(212, 44, 44);
+    display: block;
 }
 
 .button-container {
