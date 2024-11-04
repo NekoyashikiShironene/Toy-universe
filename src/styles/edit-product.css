@@ -126,6 +126,11 @@
     justify-content: center;
 }
 
+.search-error-message {
+    text-align: center;
+    color: rgb(255, 36, 36);
+}
+
 @media screen and (min-width: 768px) {
     
     .add-product-form,.product-detail{

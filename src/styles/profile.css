@@ -31,15 +31,24 @@
 }
 
 .profile-content input {
-    width: 70%;
+    width: 60%;
     border-radius: 10px;
     border: 1px solid rgb(138, 138, 138);
 }
 
 .user-info textarea{
-    width: 70%;
+    width: 60%;
     border-radius: 10px;
-    
+}
+
+.change-password-link {
+    margin: 20px auto;
+    color: blue;
+    padding-bottom: 20px;
+}
+
+.change-password-link a {
+    color: blue;
 }
 
 .read-only {
@@ -62,6 +71,14 @@
 
 .profile-submit:hover{
     background-color: rgb(172, 208, 211);
+}
+
+.success {
+    color: rgb(43, 224, 43);
+}
+
+.error {
+    color: rgb(241, 55, 55);
 }
 
 @media screen and (min-width: 768px) {
