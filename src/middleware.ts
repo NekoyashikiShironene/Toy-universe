@@ -8,10 +8,24 @@ const empOnlyPaths = [
 ]
 
 export async function middleware(req: NextRequest) {
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-pathname", req.nextUrl.pathname);
+
+  const responseNext = NextResponse.next(
+    {
+      request: {
+        headers: requestHeaders
+      }
+    }
+  );
 
   // ignore some requests
-  if ((req.nextUrl.pathname.startsWith("/_next")) || req.nextUrl.pathname.startsWith("/api"))
-    return NextResponse.next();
+  if (
+      req.nextUrl.pathname.startsWith("/_next") || 
+      req.nextUrl.pathname.startsWith("/api") ||
+      req.nextUrl.pathname.startsWith("/products")
+    )
+    return responseNext;
   
   // get cookie & session
   const token = await getToken({
@@ -40,7 +54,7 @@ export async function middleware(req: NextRequest) {
 
   }
 
-  return NextResponse.next();
+  return responseNext;
 }
 
 export const config = {
@@ -54,5 +68,8 @@ export const config = {
     "/order-management",
     "/edit-product",
     "/set-username",
+
+    // No authen required use for doing pagination
+    "/products"
   ],
 }
