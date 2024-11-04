@@ -18,7 +18,6 @@ type Props = {
     searchParams: { [key: string]: string | undefined }
 }
 
-
 export default async function OrderManagement({ searchParams }: Props) {
     const user = (await useSession())?.user as UserSession;
     const statusFilter = searchParams.status_id;
