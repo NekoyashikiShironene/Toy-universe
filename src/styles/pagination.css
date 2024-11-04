@@ -1,0 +1,19 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.pagination a {
+    padding: 10px 15px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #0070f3;
+    border-radius: 5px;
+}
+
+.pagination a:hover {
+    background-color: #005bb5;
+}
