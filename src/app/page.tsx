@@ -17,11 +17,20 @@ export default async function Home() {
     <>
       <Search type="mobile" />
       <ImageSlider/>
-      
+      <div style={{textAlign: "center"}}>
+          <ul> <h2>Promotion code for you!!!</h2>
+            <li>Get 50% off purchases over 10000 [50OFF24]</li>
+            <li>New customers get 20% off [WELCOME]</li>
+            <li>Buy 3 identical items and save 10% [LETSSHOPPING]</li>
+            <li>50% Discount [DISCNT05]</li>
+          </ul>
+        </div>
       <div className="show-product-home">
         <Link href={`/products?brand=LEGO`}>
           <div className="topic-product">LEGO</div>
         </Link>
+
+        
         
         <div className="product-cards">
           {
