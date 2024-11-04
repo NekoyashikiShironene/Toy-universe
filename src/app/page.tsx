@@ -7,10 +7,9 @@ import Image from "next/image";
 import type { Product } from "@/types/products";
 import "../styles/product_card.css";
 
-
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-
   const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/products?brand=LEGO`);
   const data = (await res.json()).data;
   
