@@ -1,23 +1,42 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import { ContentContainer } from '@/components/Containers';
-import { addProduct } from '@/actions/product'; 
+import { addProductAction } from '@/actions/product'; 
 import PreviewImage from '@/components/PreviewImage';
 import '../../styles/edit-product.css'
 import EditProductForm from '@/components/EditProductForm';
-import useSession from '@/utils/auth';
-import { UserSession } from '@/types/session';
+import { useFormState } from "react-dom";
 
-export default async function EditProduct() {
-    const user = (await useSession())?.user as UserSession;
+
+export default function EditProduct() {
+    const [state, formAction] = useFormState(addProductAction, null);
+    const [showImage, setShowImage] = useState<boolean>(true);
+
+    useEffect(() => {
+        const addMessage = document.getElementById('add-result-message');
+        
+        // clear text fields
+        if (state?.success) {
+            document.querySelectorAll(".product-input input")
+                .forEach(
+                    input => (input as HTMLInputElement).value = ""
+                );
+                
+            addMessage!.className = "add-success";
+            setShowImage(false);
+        }
+        else {
+            addMessage!.className = "add-error";
+        }
+            
+    }, [state])
     
     return (
-        <>
-        {(user?.role === 'emp')?
             <ContentContainer>
             
             <div className='add-product-container'>
                     <h1>Add Product Form</h1>
-                    <form action={addProduct} className='add-product-form'>
+                    <form action={formAction} className='add-product-form'>
                         <div className='product-input'>
                             <label>Product name:</label>
                             <input type='text' name='prod_name' pattern='^[A-Za-z0-9\s]{3,50}$' required />
@@ -30,38 +49,35 @@ export default async function EditProduct() {
 
                         <div className='product-input'>
                             <label>Brand:</label>
-                            <input type='text' name='brand' required />
+                            <input type='text' name='brand' pattern='^[A-Za-z\s]{3,30}$' required />
                         </div>
 
                         <div className='product-input'>
                             <label>Description:</label>
-                            <input type='text' name='description' required />
+                            <input type='text' name='description' pattern='^[A-Za-z\s]{3,100}$' required />
                         </div>
 
                         <div className='product-input'>
                             <label>Price:</label>
-                            <input type='text' name='price' required />
+                            <input type='number' name='price' min={0} required />
                         </div>
 
                         <div className='product-input'>
                             <label>Stock:</label>
-                            <input type='number' name='stock' required />
+                            <input type='number' min={0} name='stock' required />
                         </div>
 
-                        <PreviewImage/>
+                        <PreviewImage showImage={showImage} setShowImage={setShowImage} />
 
                         <button type='submit' className='submit-button'>Submit</button>
+                        
+                        <p id='add-result-message'>{state?.message}</p>
                     </form>
                 </div>
 
                 <EditProductForm />
 
             </ContentContainer>
-        : 
-            <div className='error-message'>
-                <h2>You don&apos;t have permission for this page.</h2>
-            </div>
-        }
-        </>
+      
     )
 }
