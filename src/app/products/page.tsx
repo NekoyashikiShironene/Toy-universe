@@ -18,7 +18,6 @@ export default async function ProductsPage({ searchParams }: Prop) {
         url.searchParams.set("query", query);
     }
 
-    // Set multiple category values if present
     if (category.length > 0) {
         if (typeof category === "string")
             url.searchParams.append("category", category);
@@ -26,7 +25,6 @@ export default async function ProductsPage({ searchParams }: Prop) {
             category.forEach(cat => url.searchParams.append("category", cat));
     }
 
-    // Set multiple brand values if present
     if (brand.length > 0) {
         if (typeof brand === "string")
             url.searchParams.append("brand", brand);
@@ -34,7 +32,6 @@ export default async function ProductsPage({ searchParams }: Prop) {
             brand.forEach(br => url.searchParams.append("brand", br));
     }
 
-    // Add maxPrice if it exists
     if (maxPrice) {
         url.searchParams.set("maxPrice", maxPrice);
     }
@@ -43,7 +40,6 @@ export default async function ProductsPage({ searchParams }: Prop) {
     const products = await res.json();
 
     return (
-        // $_GET["query"]
         <>  
             <ProductFilter category={category} brand={brand} maxPrice={maxPrice} />
             <ProductCards products={products.data} />

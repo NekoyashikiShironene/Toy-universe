@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     const query = req.nextUrl.searchParams.get('query');
     const category = req.nextUrl.searchParams.getAll('category');
     const brand = req.nextUrl.searchParams.getAll('brand');
-    const maxPrice = req.nextUrl.searchParams.get('maxPrice'); // Use get() for a single value
+    const maxPrice = req.nextUrl.searchParams.get('maxPrice');
 
     const connection = await connectToDatabase();
 
