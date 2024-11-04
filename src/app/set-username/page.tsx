@@ -20,7 +20,7 @@ export default async function AccountInfo() {
           <input type='hidden' name='id' defaultValue={result?.id} />
           <div className='user-info'>
             <p>Username: </p>
-            <input type='text' name='username' />
+            <input type='text' name='username' pattern='^[A-Za-z][A-Za-z0-9_]{5,19}$' />
           </div>
 
           <button type='submit'>Submit</button>
