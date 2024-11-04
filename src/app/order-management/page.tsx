@@ -16,13 +16,13 @@ import { unstable_cache } from 'next/cache';
 const formatAddress = (address: Address): string => {
     
     return [
-        address.house_number,
-        address.street,
-        address.subdistrict,
-        address.district,
-        address.province,
-        address.postal_code,
-        address.country
+        address?.house_number,
+        address?.street,
+        address?.subdistrict,
+        address?.district,
+        address?.province,
+        address?.postal_code,
+        address?.country
     ].filter(Boolean).join(' ');
 }
 
