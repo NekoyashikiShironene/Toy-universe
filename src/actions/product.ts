@@ -1,5 +1,4 @@
 "use server";
-import connectToDatabase from "@/utils/db";
 import { addProduct } from "@/db/product";
 import { uploadFile } from "@/utils/uploadFile";
 import { updateProduct } from "@/db/product";

@@ -10,14 +10,13 @@ export function getUrlParams(params: Params): string {
 
     let key: keyof Params;
     for (key in params) {
-        const value: any = params[key];
+        const value: string | number | string[] | undefined = params[key];
         if (value == undefined)
             url.searchParams.delete(key, value);
         else if (value instanceof Array) {
-            value.forEach(v => url.searchParams.append(key, v))
-            
+            value.forEach(v => url.searchParams.append(key, v))   
         } else
-            url.searchParams.set(key, value);     
+            url.searchParams.set(key, value.toString());     
     }
 
     return url.toString();

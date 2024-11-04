@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/utils/db";
-import { count } from "console";
 import { RowDataPacket } from "mysql2";
 
 

@@ -10,7 +10,7 @@ import { ProductParams } from "@/types/searchParams";
 
 export default function ProductFilter({ params }: { params: ProductParams }) {
     const router = useRouter();
-    let newParams = { ...params };
+    const newParams = { ...params };
     const { maxPrice, category, brand } = newParams;
 
     const [maxPriceState, setMaxPriceState] = useState<number>(Number(maxPrice) || 20000);
