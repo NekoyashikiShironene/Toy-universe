@@ -3,7 +3,9 @@ version: '3.8'
 services:
   # Next.js App Service
   nextjs:
-    image: node:18-alpine
+    build:
+        context: .
+        dockerfile: Dockerfile
     container_name: nextjs_app
     working_dir: /app
     volumes:
@@ -17,9 +19,8 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-    command: sh -c "npm i && npm run dev"
     networks:
-      - mynetwork
+      - toynetwork
     depends_on:
       - db
 
@@ -38,7 +39,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - mynetwork
+      - toynetwork
 
   # phpMyAdmin Service
   phpmyadmin:
@@ -51,7 +52,7 @@ services:
     ports:
       - '8080:80'
     networks:
-      - mynetwork
+      - toynetwork
     depends_on:
       - db
 
@@ -61,11 +62,9 @@ services:
     command: listen --forward-to http://host.docker.internal:3000/api/webhook
     environment:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
-  #  networks:
-  #    - mynetwork
 
 networks:
-  mynetwork:
+  toynetwork:
 
 volumes:
   mysql_data:
