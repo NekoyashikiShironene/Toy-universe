@@ -10,7 +10,7 @@ import { formatAddress } from '@/utils/address';
 import OrderItem from '@/components/OrderItem';
 import OrderManager from '@/components/OrderManager';
 import StatusFilter from '@/components/OrderFilter';
-
+import TimeDisplay from '@/components/LocaleDateTime';
 import { unstable_cache } from 'next/cache';
 
 type Props = {
@@ -43,7 +43,6 @@ export default async function Order({ searchParams }: Props) {
     const statusFilter = searchParams.status_id as string;
     
     const orders = await getOrder(statusFilter, user);
-    
     return (
         <ContentContainer>
             <StatusFilter selectedStatus={statusFilter || ''} />
@@ -54,7 +53,7 @@ export default async function Order({ searchParams }: Props) {
                         <div className='order-header'>
                             <span><b>Order ID:</b> {order.ord_id}</span>
                             <span><b>Status:</b> {orderStatus[order.status_id]}</span>
-                            <span><b>Date:</b> {order.date_time.toString()}</span>
+                            <span><b>Date:</b> <TimeDisplay utcTime={order.date_time} mode="dt" /> </span>
                         </div>
 
                         <div className='order-row'>

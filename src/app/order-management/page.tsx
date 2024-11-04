@@ -6,12 +6,14 @@ import type { Order } from '@/types/order';
 import type { Address } from '@/types/address';
 import { orderStatus } from '@/utils/statusId';
 import OrderStatusDropdown from '@/components/OrderStatusDropdown';
+import TimeDisplay from '@/components/LocaleDateTime';
 import OrderItem from '@/components/OrderItem';
 import useSession from '@/utils/auth';
 import { UserSession } from '@/types/session';
 import { redirect } from "next/navigation";
 import StatusFilter from '@/components/OrderFilter';
 import { unstable_cache } from 'next/cache';
+
 
 const formatAddress = (address: Address): string => {
     
@@ -76,7 +78,7 @@ export default async function OrderManagement({ searchParams }: Props) {
                             <div key={order.ord_id} className='order-container'>
                                 <div className='order-header'>
                                     <span><b>Order ID:</b> {order.ord_id}</span>
-                                    <span><b>Date:</b> {order.date_time.toString()}</span>
+                                    <span><b>Date:</b> <TimeDisplay utcTime={order.date_time.toLocaleString()} mode="dt" /></span>
                                     
                                     <span><b>Status:</b> {orderStatus[order.status_id]}</span>
                                 </div>
