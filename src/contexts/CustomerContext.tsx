@@ -24,7 +24,6 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
 
     // check selected and availability of products in cart
     async function syncProducts() {
-        console.log("here")
         if (!cartItemsSession?.length || status !== 'authenticated')
             return;
 
@@ -48,7 +47,7 @@ export default function CustomerProvider({ children }: { children: React.ReactNo
         async function fetchNewUser() {
             if (status !== 'authenticated')
                 return;
-            const res = await fetch("api/validate/new-user");
+            const res = await fetch("api/validate/new-user", {cache: "no-store"});
             const data = (await res.json()).data;
             if (data)
                 setNewuser(true);
