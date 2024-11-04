@@ -44,8 +44,8 @@ export async function middleware(req: NextRequest) {
 
 
   // Force new user who logged in with google to set their username
-  if (token?.provider === "google" && token?.role === "cus") {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/validate/isempty?attr=username&id=${token.id}`);
+  if (token?.provider === "google" && token?.role === "cus" && !req.nextUrl.pathname.startsWith("/set-username")) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/validate/isempty?attr=username&id=${token.id}`, { cache: "no-store" });
     const empty = (await res.json())?.value
 
     if (empty) {
