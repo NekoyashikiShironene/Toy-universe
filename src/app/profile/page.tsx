@@ -7,6 +7,7 @@ import { UserSession } from '@/types/session';
 import ProfilePicture from '@/components/ProfilePicture';
 import { uploadProfilePicture } from '@/actions/upload';
 import { getUser } from '@/db/user';
+import Link from 'next/link';
 
 export default async function ProfilePage() {
   const user = (await useSession())?.user as UserSession;
@@ -27,23 +28,21 @@ export default async function ProfilePage() {
             <input className='profile-img-input' type='file' name='image' />
             <button type='submit' className='profile-submit'>Submit</button>
           </form>
-
         </div>
-
+        
         <form action={updateAccount} className='profile-form'>
 
           <input type='hidden' name='id' defaultValue={result?.id} />
 
           <div className='user-info'>
             <p>Username: </p>
-            <input type='text' className='read-only' name='username' defaultValue={result?.username} readOnly />
-          </div>
-
-          <div className='user-info'>
+            <input type='text' className='read-only' name='username' defaultValue={result?.username} pattern='^[A-Za-z][A-Za-z0-9_]{5,19}$' readOnly />
             
+          </div>
+          
+          <div className='user-info'>
               <p>Name: </p>
               <input type='text' name='name' defaultValue={result?.name} />
-            
           </div>
 
           <div className='user-info'>
@@ -63,6 +62,11 @@ export default async function ProfilePage() {
 
           <button type='submit' className='profile-submit'>Submit</button>
         </form>
+        
+        <div className='change-password-link'>
+          <Link href='profile/set-password'>Change Password</Link>
+        </div>
+        
       </div>
 
     </ContentContainer>
