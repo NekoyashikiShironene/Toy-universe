@@ -5,9 +5,8 @@ import Link from "next/link";
 
 import useSession from "@/utils/auth";
 import { UserSession } from "@/types/session";
-import connectToDatabase from "@/utils/db";
 import { notFound } from "next/navigation";
-import { RowDataPacket } from "mysql2/promise";
+import { getOrderItems, verifyUserOrder } from "@/db/order";
 
 
 type Prop = {
@@ -18,35 +17,15 @@ export default async function SuccessfullPage({ searchParams }: Prop) {
     const user = (await useSession())?.user as UserSession;
     const { order_id } = searchParams;
 
-    const connection = await connectToDatabase();
 
     // check whether order id is from user and order payment is successful
-    const [results] = await connection.query<RowDataPacket[]>("SELECT * FROM order_item \
-        JOIN `order` ON `order`.ord_id = order_item.ord_id \
-        WHERE order_item.ord_id = ? AND order_item.cus_id = ? AND `order`.status_id = 1",
-        [order_id, user.id]
-    );
+    const results = await verifyUserOrder(Number(order_id), user.id, 1);
 
     if (!results[0])
         notFound();
 
     // get total amount
-    const [orderedItems] = await connection.query<RowDataPacket[]>(
-        `SELECT 
-            order_item.quantity,
-            product.prod_id,
-            product.prod_name AS product_name,
-            product.price,
-            COALESCE(promotion.discount, 0) AS discount,
-            (order_item.quantity * product.price * (1 - COALESCE(promotion.discount, 0))) AS item_total
-         FROM order_item
-         JOIN product ON order_item.prod_id = product.prod_id
-         LEFT JOIN applying ON order_item.ord_id = applying.ord_id
-         LEFT JOIN promotion ON applying.promo_id = promotion.promo_id
-         WHERE order_item.ord_id = ?`,
-        [order_id]
-    );
-
+    const orderedItems = await getOrderItems(Number(order_id));
     const total_amount = orderedItems.reduce((prev, current) =>
         prev + current.item_total,
         0);

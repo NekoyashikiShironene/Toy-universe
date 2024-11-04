@@ -1,9 +1,7 @@
 import React from 'react';
-import connectToDatabase from "@/utils/db";
 import { ContentContainer } from '@/components/Containers';
 import '@/styles/order-management.css';
-import type { Order } from '@/types/order';
-import type { Address } from '@/types/address';
+import { formatAddress } from '@/utils/address';
 import { orderStatus } from '@/utils/statusId';
 import OrderStatusDropdown from '@/components/OrderStatusDropdown';
 import TimeDisplay from '@/components/LocaleDateTime';
@@ -12,50 +10,13 @@ import useSession from '@/utils/auth';
 import { UserSession } from '@/types/session';
 import { redirect } from "next/navigation";
 import StatusFilter from '@/components/OrderFilter';
-import { unstable_cache } from 'next/cache';
 
+import { getAllOrder } from '@/db/order';
 
-const formatAddress = (address: Address): string => {
-    
-    return [
-        address?.house_number,
-        address?.street,
-        address?.subdistrict,
-        address?.district,
-        address?.province,
-        address?.postal_code,
-        address?.country
-    ].filter(Boolean).join(' ');
-}
 
 type Props = {
     searchParams: { [key: string]: string | undefined }
 }
-
-
-const getOrder = unstable_cache(
-    async (statusFilter: string | string[] | undefined) => { 
-        const connection = await connectToDatabase();
-        let orders;
-        try {
-            const [ results ] = await connection.query( `SELECT DISTINCT order.ord_id, status_id, shipping_address, date_time, order_item.cus_id, name, email, tel 
-                                                        FROM \`order\` 
-                                                        JOIN order_item ON \`order\`.ord_id = order_item.ord_id 
-                                                        JOIN customer ON order_item.cus_id = customer.cus_id 
-                                                        ${statusFilter ? 'WHERE status_id = ?' : ''}`, 
-                                                        statusFilter ? [statusFilter] : []);
-            orders = results as Order[];
-            
-        }   
-        catch (e: unknown) {
-            console.error(e);
-        }
-        
-        return orders;
-    },
-    ["customer-order"],
-    { revalidate: 3600 }
-)
 
 
 export default async function OrderManagement({ searchParams }: Props) {
@@ -65,7 +26,7 @@ export default async function OrderManagement({ searchParams }: Props) {
     if (user?.role !== "emp")
         redirect("/");
     
-    const orders = await getOrder(statusFilter);
+    const orders = await getAllOrder(statusFilter);
 
     return (
         <ContentContainer>
@@ -78,7 +39,7 @@ export default async function OrderManagement({ searchParams }: Props) {
                             <div key={order.ord_id} className='order-container'>
                                 <div className='order-header'>
                                     <span><b>Order ID:</b> {order.ord_id}</span>
-                                    <span><b>Date:</b> <TimeDisplay utcTime={order.date_time.toLocaleString()} mode="dt" /></span>
+                                    <span><b>Date:</b> <TimeDisplay utcTime={order.date_time.toString()} mode="dt" /></span>
                                     
                                     <span><b>Status:</b> {orderStatus[order.status_id]}</span>
                                 </div>

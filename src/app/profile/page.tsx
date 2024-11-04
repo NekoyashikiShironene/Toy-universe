@@ -2,25 +2,15 @@ import React from 'react';
 import { ContentContainer } from '@/components/Containers';
 import '../../styles/profile.css';
 import useSession from '../../utils/auth';
-import connectToDatabase from "@/utils/db";
 import { updateAccount } from '@/actions/updateAccount';
-import type { IUser } from "@/types/db";
 import { UserSession } from '@/types/session';
 import ProfilePicture from '@/components/ProfilePicture';
 import { uploadProfilePicture } from '@/actions/upload';
-
+import { getUser } from '@/db/user';
 
 export default async function ProfilePage() {
   const user = (await useSession())?.user as UserSession;
-
-  const connection = await connectToDatabase();
-
-  const [results] = await connection.query<IUser[]>("SELECT cus_id as id, username, password, name, email, tel, address, 'cus' AS role \
-                                                          FROM customer WHERE cus_id=?  \
-                                                          UNION SELECT emp_id as id, username, password, name, email, tel, 'None' as address, 'emp' AS role \
-                                                          FROM employee WHERE emp_id=?", [user?.id, user?.id]);
-
-  const result = results[0];
+  const result = await getUser(user?.id);
 
   const loggedInWithGoogle = user?.provider === 'google';
   const isEmployee = user?.role === 'emp';

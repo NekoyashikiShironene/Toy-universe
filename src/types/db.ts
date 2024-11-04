@@ -1,7 +1,9 @@
 import { RowDataPacket } from "mysql2/promise";
 import { type Address } from "./address";
 
-export interface ICustomer extends RowDataPacket {
+export type OptionalValue = number | string;
+
+export type ICustomer = RowDataPacket & {
     cus_id?: number,
     username?: string,
     password?: string,
@@ -12,7 +14,7 @@ export interface ICustomer extends RowDataPacket {
     address_json: Address
 }
 
-export interface IUser extends RowDataPacket {
+export type IUser = RowDataPacket & {
     id?: number,
     username?: string,
     password?: string,

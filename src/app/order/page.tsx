@@ -1,7 +1,5 @@
 import React from 'react';
-import connectToDatabase from "@/utils/db";
 import { ContentContainer } from '@/components/Containers';
-import '@/styles/order.css';
 import type { Order } from '@/types/order';
 import { orderStatus } from '@/utils/statusId';
 import { UserSession } from '@/types/session';
@@ -11,38 +9,20 @@ import OrderItem from '@/components/OrderItem';
 import OrderManager from '@/components/OrderManager';
 import StatusFilter from '@/components/OrderFilter';
 import TimeDisplay from '@/components/LocaleDateTime';
-import { unstable_cache } from 'next/cache';
+import { getUserOrder } from '@/db/order';
+
+import '@/styles/order.css';
 
 type Props = {
     searchParams: { [key: string]: string | string[] | undefined }
 }
 
-const getOrder = unstable_cache(
-    async (statusFilter: string | string[] | undefined, user: UserSession) => {
-        const connection = await connectToDatabase();
-        const [ results ] = await connection.query(`SELECT DISTINCT order.ord_id, status_id, shipping_address, order.session_id, 
-            order.session_url, date_time, order_item.cus_id, name, email, tel 
-            FROM \`order\`
-            JOIN order_item ON order.ord_id = order_item.ord_id 
-            JOIN customer ON order_item.cus_id = customer.cus_id 
-            WHERE order_item.cus_id = ? 
-            ${statusFilter ? 'AND status_id = ?' : ''}
-            ORDER BY order.ord_id DESC`,
-            statusFilter ? [user.id, statusFilter] : [user.id]
-        );
-
-        const orders = results as Order[];
-        return orders;
-    },
-    ["my-order"],
-    { revalidate: 3600 }
-)
 
 export default async function Order({ searchParams }: Props) {
     const user = (await useSession())?.user as UserSession;
     const statusFilter = searchParams.status_id as string;
-    
-    const orders = await getOrder(statusFilter, user);
+    const orders = await getUserOrder(statusFilter, user);
+
     return (
         <ContentContainer>
             <StatusFilter selectedStatus={statusFilter || ''} />
@@ -53,7 +33,7 @@ export default async function Order({ searchParams }: Props) {
                         <div className='order-header'>
                             <span><b>Order ID:</b> {order.ord_id}</span>
                             <span><b>Status:</b> {orderStatus[order.status_id]}</span>
-                            <span><b>Date:</b> <TimeDisplay utcTime={order.date_time} mode="dt" /> </span>
+                            <span><b>Date:</b> <TimeDisplay utcTime={order.date_time.toString()} mode="dt" /> </span>
                         </div>
 
                         <div className='order-row'>
