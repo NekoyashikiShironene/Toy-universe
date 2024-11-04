@@ -23,7 +23,7 @@ export async function updateAccount(formData: FormData) {
     } catch (e: unknown) {
         console.error(e);
         return {
-            message: "Registration failed"
+            message: "Update user account failed"
         }
     }
 
