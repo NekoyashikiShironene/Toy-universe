@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import connectToDatabase from "@/utils/db";
+import { revalidateTag } from "next/cache";
 
 export async function setUsername(formData: FormData) {
 
@@ -12,6 +13,7 @@ export async function setUsername(formData: FormData) {
 
     try {
         await connection.query("UPDATE customer SET username = ? WHERE cus_id = ?", [username, id]);
+        revalidateTag("user");
     } catch (e: unknown) {
         console.error(e);
         return {
