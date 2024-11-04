@@ -1,5 +1,5 @@
 'use client';
-import React, { type ElementType, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import type { Product } from '@/types/products';
 import Image from 'next/image';
@@ -126,7 +126,7 @@ export default function EditProductForm() {
                                 <p>{defaultCategory}</p>
                                 <select name='category' defaultValue={defaultCategory}>
                                     {categories.map(category => (
-                                        <option value={category} selected={defaultCategory === category}>{category}</option>
+                                        <option key={category} value={category} selected={defaultCategory === category}>{category}</option>
                                     ))}
                                 </select>
                             </div>
@@ -136,7 +136,7 @@ export default function EditProductForm() {
                                 <p>{defaultBrand}</p>
                                 <select name='brand' defaultValue={defaultBrand}>
                                     {brands.map(brand => (
-                                        <option value={brand} selected={defaultBrand === brand}>{brand}</option>
+                                        <option key={brand} value={brand} selected={defaultBrand === brand}>{brand}</option>
                                     ))}
                                 </select>
                             </div>
