@@ -18,7 +18,6 @@ export default async function connectToDatabase() {
     idleTimeout: 30000,
   });
   
-  console.log("Created new connection");
   globalPool = await pool.getConnection();
 
   return globalPool;

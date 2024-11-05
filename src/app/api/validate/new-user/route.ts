@@ -16,7 +16,8 @@ export async function GET() {
                                                             WHERE cus_id NOT IN \
                                                             (SELECT cus_id FROM order_item) \
                                                             AND cus_id = ?", [id]);
-    const result = results[0] ?? {};                                             
+    const result = results[0] ?? null;
+    
     return NextResponse.json({data: result});
 
 }

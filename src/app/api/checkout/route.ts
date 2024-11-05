@@ -67,6 +67,7 @@ export async function POST(req: NextRequest) {
         await connection.commit();
         revalidatePath("/detail");
         revalidatePath("/order");
+        revalidatePath("/order-management");
     } catch (e: unknown) {
         await connection.rollback();
         throw e;

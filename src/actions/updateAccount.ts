@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import connectToDatabase from "@/utils/db";
 import NextCrypto from "next-crypto";
+import { revalidateTag } from "next/cache";
 
 
 export async function updateAccount(formData: FormData) {
@@ -18,6 +19,7 @@ export async function updateAccount(formData: FormData) {
 
     try {
         await connection.query("UPDATE customer SET username = ?, name = ?, email = ?, tel = ?, address = ? WHERE cus_id = ?", [username, name, email, tel, address, id]);
+        revalidateTag("user");
         return {
             message: "Update user account successful"
         }

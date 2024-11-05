@@ -39,7 +39,6 @@ export async function GET(req: NextRequest) {
         values.push(maxPrice);
     }
 
-    console.log(page, per_page)
     if (page && per_page) {
         limit_offet = " LIMIT ? OFFSET ?";
         values.push(Number(per_page));

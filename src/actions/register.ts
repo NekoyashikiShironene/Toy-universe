@@ -21,8 +21,8 @@ export async function register(prevState: unknown, formData: FormData) {
     const connection = await connectToDatabase();
 
     try {
-        await connection.query("INSERT INTO customer (username, password, name, email, tel, address) \
-                                                VALUES(?, ?, ?, ?, ?, ?)", [username, encryptedPassword, name, email, tel, address]);
+        await connection.query("INSERT INTO customer (username, password, name, email, tel, address, address_json) \
+                                                VALUES(?, ?, ?, ?, ?, ?, ?)", [username, encryptedPassword, name, email, tel, address, JSON.stringify({street: address})]);
     } catch (e: unknown) {
         console.error(e);
         return {

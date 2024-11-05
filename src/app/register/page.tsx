@@ -17,7 +17,6 @@ export default function Register() {
     const { data: session } = useSession();
     const router = useRouter();
 
-    console.log(session);
     if (session)
         router.push("/");
 
@@ -71,7 +70,7 @@ export default function Register() {
             const email = email_input.value;
             
             if (email) {
-                const res = await fetch('api/validate/isexisted?email=' + email);
+                const res = await fetch('api/validate/isexisted?email=' + email, {cache: "no-store"});
                 const existed = (await res.json()).value;
                 
                 if (!email_input.validity.valid) {

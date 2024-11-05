@@ -2,7 +2,7 @@
 
 import connectToDatabase from "@/utils/db";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import Stripe from "stripe";
 
 export async function cancelOrder(session_id: string) {
@@ -40,6 +40,8 @@ export async function cancelOrder(session_id: string) {
         });
         await connection.commit();
         revalidatePath("/order");
+        revalidateTag("userOrder");
+        revalidateTag("allOrder");
     } catch (e: unknown) {
         await connection.rollback();
         throw e;

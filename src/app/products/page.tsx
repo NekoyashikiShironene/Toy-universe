@@ -53,7 +53,6 @@ export default async function ProductsPage({ searchParams }: Prop) {
     const products = (await res.json());
     const total_count = products.count;
 
-    console.log(total_count)
     return (
         <>  
             <ProductFilter params={params} />

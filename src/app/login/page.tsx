@@ -14,7 +14,6 @@ export default function Login() {
     const passwordRef = useRef<HTMLInputElement>(null);
     const errorRef = useRef<HTMLParagraphElement>(null);
 
-    console.log(session);
     if (session) 
         router.push("/");
 
