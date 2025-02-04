@@ -34,12 +34,13 @@ export const getAllOrder = unstable_cache(
         const connection = await connectToDatabase();
         let orders;
         try {
-            const [ results ] = await connection.query( `SELECT DISTINCT order.ord_id, status_id, shipping_address, date_time, order_item.cus_id, name, email, tel 
-                                                        FROM \`order\` 
-                                                        JOIN order_item ON \`order\`.ord_id = order_item.ord_id 
-                                                        JOIN customer ON order_item.cus_id = customer.cus_id 
-                                                        ${statusFilter ? 'WHERE status_id = ?' : ''}`, 
-                                                        statusFilter ? [statusFilter] : []);
+            const [ results ] = await connection.query( 
+                `SELECT DISTINCT order.ord_id, status_id, shipping_address, date_time, order_item.cus_id, name, email, tel 
+                FROM \`order\` 
+                JOIN order_item ON \`order\`.ord_id = order_item.ord_id 
+                JOIN customer ON order_item.cus_id = customer.cus_id 
+                ${statusFilter ? 'WHERE status_id = ?' : ''}`, 
+                statusFilter ? [statusFilter] : []);
             orders = results as Order[];
             
         }   

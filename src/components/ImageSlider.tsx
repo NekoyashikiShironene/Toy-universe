@@ -11,7 +11,10 @@ const Img = [
    },
    {
       src: '/ads2.jpg'
-   }
+   },
+   {
+      src: '/promotion.png'
+   },
 ]
 
 export default function ImageSlider() {
